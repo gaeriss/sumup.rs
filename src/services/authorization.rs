@@ -43,8 +43,8 @@ impl<'a> Authorization<'a> {
     fn token_by_code(&self) -> crate::Result<crate::AccessToken> {
         let payload = ureq::json!({
             "grant_type": "authorization_code",
-            "client_id": self.config.app_id,
-            "client_secret": self.config.app_secret,
+            "client_id": self.config.client_id,
+            "client_secret": self.config.client_secret,
             "scope": self.config.scopes()?,
             "code": self.config.code,
         });
@@ -55,8 +55,8 @@ impl<'a> Authorization<'a> {
     fn token_by_client_credentials(&self) -> crate::Result<crate::AccessToken> {
         let payload = ureq::json!({
             "grant_type": "client_credentials",
-            "client_id": self.config.app_id,
-            "client_secret": self.config.app_secret,
+            "client_id": self.config.client_id,
+            "client_secret": self.config.client_secret,
             "scope": self.config.scopes()?,
         });
 
@@ -76,8 +76,8 @@ impl<'a> Authorization<'a> {
 
         let payload = ureq::json!({
             "grant_type": "password",
-            "client_id": self.config.app_id,
-            "client_secret": self.config.app_secret,
+            "client_id": self.config.client_id,
+            "client_secret": self.config.client_secret,
             "scope": self.config.scopes()?,
             "username": username,
             "password": password,
@@ -89,8 +89,8 @@ impl<'a> Authorization<'a> {
     pub(crate) fn refresh_token(&self, refresh_token: &str) -> crate::Result<crate::AccessToken> {
         let payload = ureq::json!({
             "grant_type": "refresh_token",
-            "client_id": self.config.app_id,
-            "client_secret": self.config.app_secret,
+            "client_id": self.config.client_id,
+            "client_secret": self.config.client_secret,
             "scope": self.config.scopes()?,
             "refresh_token": refresh_token,
         });

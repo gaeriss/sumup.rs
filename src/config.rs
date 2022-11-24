@@ -4,9 +4,9 @@ pub struct Config {
      * This is the client id that you receive after you
      * [register](https://developer.sumup.com/docs/register-app) your application in SumUp
      */
-    pub app_id: String,
+    pub client_id: String,
     /** This is the client secret that corresponds to the client id */
-    pub app_secret: String,
+    pub client_secret: String,
     /** This indicates which authorization flow should be used to acquire OAuth token */
     pub grant_type: GrantType,
     /**
@@ -34,10 +34,10 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(app_id: &str, app_secret: &str, code: &str) -> Self {
+    pub fn new(client_id: &str, client_secret: &str, code: &str) -> Self {
         Self {
-            app_id: app_id.to_string(),
-            app_secret: app_secret.to_string(),
+            client_id: client_id.to_string(),
+            client_secret: client_secret.to_string(),
             code: Some(code.to_string()),
 
             ..Default::default()
