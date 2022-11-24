@@ -3,6 +3,7 @@ name = "sumup"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
+description = "SumUp API"
 
 [dependencies]
 serde_json = "1.0"
