@@ -43,6 +43,55 @@ pub struct Checkout {
     return_url: Option<String>,
 }
 
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+pub struct Customer {
+    customer_id: String,
+    #[serde(default)]
+    personal_detail: Details,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+pub struct Details {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    first_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    last_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    email: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    phone: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    address: Option<Address>,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Address {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    city: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    country: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    line1: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    line2: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    state: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    postalcode: Option<String>,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Card {
+    name: String,
+    number: String,
+    expiry_year: String,
+    expiry_month: String,
+    cvv: String,
+    zip_code: String,
+}
+
 pub struct SumUp {
     access_token: AccessToken,
     api: Api,
@@ -85,5 +134,9 @@ impl SumUp {
 
     pub fn checkout(&self) -> crate::services::Checkout {
         services::Checkout::new(&self.api, &self.access_token)
+    }
+
+    pub fn customer(&self) -> crate::services::Customer {
+        services::Customer::new(&self.api, &self.access_token)
     }
 }
