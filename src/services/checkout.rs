@@ -22,16 +22,16 @@ impl<'a> Checkout<'a> {
     }
 
     pub fn find_by_id(&self, id: &str) -> crate::Result<crate::Checkout> {
-        self.api.checkout_get(id, &self.access_token)
+        self.api.checkout_get(id, self.access_token)
     }
 
     pub fn find_by_reference_id(&self, reference_id: &str) -> crate::Result<crate::Checkout> {
         self.api
-            .checkout_reference_id(reference_id, &self.access_token)
+            .checkout_reference_id(reference_id, self.access_token)
     }
 
-    pub fn delete(&self, id: &str) -> crate::Result<crate::Checkout> {
-        self.api.checkout_delete(id, &self.access_token)
+    pub fn delete(&self, id: &str) -> crate::Result {
+        self.api.checkout_delete(id, self.access_token)
     }
 
     pub fn pay(
@@ -40,7 +40,7 @@ impl<'a> Checkout<'a> {
         customer_id: &str,
         card_token: &str,
         installments: Option<u8>,
-    ) -> crate::Result<crate::Checkout> {
+    ) -> crate::Result {
         let payload = ureq::json!({
             "payment_type": "card",
             "customer_id": customer_id,
@@ -48,6 +48,6 @@ impl<'a> Checkout<'a> {
             "installments": installments.unwrap_or(1),
         });
 
-        self.api.checkout_update(id, &payload, &self.access_token)
+        self.api.checkout_update(id, &payload, self.access_token)
     }
 }

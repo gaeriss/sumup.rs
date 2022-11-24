@@ -21,6 +21,12 @@ pub struct AccessToken {
     pub(crate) refresh_token: Option<String>,
 }
 
+impl AccessToken {
+    pub fn bearer(&self) -> String {
+        format!("Bearer {}", self.value.as_deref().unwrap_or_default())
+    }
+}
+
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Checkout {
     amount: f32,
@@ -68,7 +74,7 @@ impl SumUp {
         let refresh_token = refresh_token
             .or(self.access_token.refresh_token.as_deref())
             .ok_or(crate::Error::Auth("There is no refresh token"))?;
-        self.access_token = self.authorization().refresh_token(&refresh_token)?;
+        self.access_token = self.authorization().refresh_token(refresh_token)?;
 
         Ok(())
     }

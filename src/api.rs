@@ -1,15 +1,25 @@
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Api {}
+
+macro_rules! url {
+    ($path:literal) => {
+        concat!("https://api.sumup.com/v1.0", $path)
+    };
+    ($path:literal, $param:ident) => {
+        &format!("{}/{}", url!($path), $param)
+    };
+}
 
 impl Api {
     pub fn new() -> Self {
-        Self {}
+        Self::default()
     }
 
     pub fn token(&self, payload: impl serde::Serialize) -> crate::Result<crate::AccessToken> {
-        let token = ureq::post("/token").send_json(payload)?.into_json()?;
-
-        Ok(token)
+        ureq::post(url!("/token"))
+            .send_json(payload)?
+            .into_json()
+            .map_err(crate::Error::from)
     }
 
     pub fn checkout_create(
@@ -17,7 +27,11 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        todo!()
+        ureq::post(url!("/checkouts"))
+            .set("Authorization", &access_token.bearer())
+            .send_json(payload)?
+            .into_json()
+            .map_err(crate::Error::from)
     }
 
     pub fn checkout_get(
@@ -25,23 +39,37 @@ impl Api {
         id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Checkout> {
-        todo!()
+        ureq::get(url!("/checkouts", id))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
     }
 
     pub fn checkout_reference_id(
         &self,
-        refence_id: &str,
+        reference_id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Checkout> {
-        todo!()
+        ureq::get(&format!(
+            "{}?checkout_reference={}",
+            url!("/checkouts"),
+            reference_id
+        ))
+        .set("Authorization", &access_token.bearer())
+        .call()?
+        .into_json()
+        .map_err(crate::Error::from)
     }
 
-    pub fn checkout_delete(
-        &self,
-        id: &str,
-        access_token: &crate::AccessToken,
-    ) -> crate::Result<crate::Checkout> {
-        todo!()
+    pub fn checkout_delete(&self, id: &str, access_token: &crate::AccessToken) -> crate::Result {
+        ureq::delete(url!("/checkouts", id))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)?;
+
+        Ok(())
     }
 
     pub fn checkout_update(
@@ -49,7 +77,13 @@ impl Api {
         id: &str,
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
-    ) -> crate::Result<crate::Checkout> {
-        todo!()
+    ) -> crate::Result {
+        ureq::put(url!("/checkouts", id))
+            .set("Authorization", &access_token.bearer())
+            .send_json(payload)?
+            .into_json()
+            .map_err(crate::Error::from)?;
+
+        Ok(())
     }
 }

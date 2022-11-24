@@ -48,7 +48,7 @@ impl Config {
         let scopes = self
             .scopes
             .iter()
-            .map(|x| serde_json::to_string(x))
+            .map(serde_json::to_string)
             .collect::<serde_json::Result<Vec<_>>>()?
             .join(" ");
 
