@@ -2,17 +2,27 @@
 pub mod errors;
 
 mod api;
-mod authorization;
 mod config;
+mod services;
 
 pub use errors::*;
 
 use api::Api;
-use authorization::Authorization;
 use config::Config;
 
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AccessToken {
+    value: Option<String>,
+    r#type: String,
+    /** The number of seconds the access token will be valid. */
+    expires_in: Option<u32>,
+    scope: Vec<crate::config::Scope>,
+    pub(crate) refresh_token: Option<String>,
+}
+
 pub struct SumUp {
-    access_token: authorization::AccessToken,
+    access_token: AccessToken,
     api: Api,
     config: Config,
 }
@@ -26,7 +36,7 @@ impl SumUp {
 
     pub fn from(config: Config) -> Result<Self> {
         let api = Api::new();
-        let authorization = Authorization::new(&api, &config);
+        let authorization = services::Authorization::new(&api, &config);
         let access_token = authorization.token()?;
 
         let sumup = Self {
@@ -42,13 +52,12 @@ impl SumUp {
         let refresh_token = refresh_token
             .or(self.access_token.refresh_token.as_deref())
             .ok_or(crate::Error::Auth("There is no refresh token"))?;
-
         self.access_token = self.authorization().refresh_token(&refresh_token)?;
 
         Ok(())
     }
 
-    pub fn authorization(&self) -> crate::Authorization {
-        Authorization::new(&self.api, &self.config)
+    pub fn authorization(&self) -> crate::services::Authorization {
+        services::Authorization::new(&self.api, &self.config)
     }
 }

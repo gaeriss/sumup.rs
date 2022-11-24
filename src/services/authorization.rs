@@ -9,9 +9,9 @@ impl<'a> Authorization<'a> {
         Self { api, config }
     }
 
-    pub fn token(&self) -> crate::Result<AccessToken> {
+    pub fn token(&self) -> crate::Result<crate::AccessToken> {
         let token = if let Some(access_token) = &self.config.access_token {
-            AccessToken {
+            crate::AccessToken {
                 value: Some(access_token.clone()),
                 scope: self.config.scopes.clone(),
                 refresh_token: self.config.refresh_token.clone(),
@@ -20,7 +20,7 @@ impl<'a> Authorization<'a> {
                 ..Default::default()
             }
         } else if let Some(refresh_token) = &self.config.refresh_token {
-            AccessToken {
+            crate::AccessToken {
                 scope: self.config.scopes.clone(),
                 refresh_token: Some(refresh_token.clone()),
                 expires_in: Some(0),
@@ -40,7 +40,7 @@ impl<'a> Authorization<'a> {
         Ok(token)
     }
 
-    fn token_by_code(&self) -> crate::Result<AccessToken> {
+    fn token_by_code(&self) -> crate::Result<crate::AccessToken> {
         let payload = ureq::json!({
             "grant_type": "authorization_code",
             "client_id": self.config.app_id,
@@ -52,7 +52,7 @@ impl<'a> Authorization<'a> {
         self.api.token(&payload)
     }
 
-    fn token_by_client_credentials(&self) -> crate::Result<AccessToken> {
+    fn token_by_client_credentials(&self) -> crate::Result<crate::AccessToken> {
         let payload = ureq::json!({
             "grant_type": "client_credentials",
             "client_id": self.config.app_id,
@@ -63,7 +63,7 @@ impl<'a> Authorization<'a> {
         self.api.token(&payload)
     }
 
-    fn token_password(&self) -> crate::Result<AccessToken> {
+    fn token_password(&self) -> crate::Result<crate::AccessToken> {
         let username = match &self.config.username {
             Some(username) => username,
             None => return Err(crate::Error::Auth("Missing username configuration")),
@@ -86,7 +86,7 @@ impl<'a> Authorization<'a> {
         self.api.token(&payload)
     }
 
-    pub(crate) fn refresh_token(&self, refresh_token: &str) -> crate::Result<AccessToken> {
+    pub(crate) fn refresh_token(&self, refresh_token: &str) -> crate::Result<crate::AccessToken> {
         let payload = ureq::json!({
             "grant_type": "refresh_token",
             "client_id": self.config.app_id,
@@ -97,15 +97,4 @@ impl<'a> Authorization<'a> {
 
         self.api.token(&payload)
     }
-}
-
-#[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct AccessToken {
-    value: Option<String>,
-    r#type: String,
-    /** The number of seconds the access token will be valid. */
-    expires_in: Option<u32>,
-    scope: Vec<crate::config::Scope>,
-    pub(crate) refresh_token: Option<String>,
 }

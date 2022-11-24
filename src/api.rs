@@ -6,10 +6,7 @@ impl Api {
         Self {}
     }
 
-    pub fn token(
-        &self,
-        payload: impl serde::Serialize,
-    ) -> crate::Result<crate::authorization::AccessToken> {
+    pub fn token(&self, payload: impl serde::Serialize) -> crate::Result<crate::AccessToken> {
         let token = ureq::post("/token").send_json(payload)?.into_json()?;
 
         Ok(token)
