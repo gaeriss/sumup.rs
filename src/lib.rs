@@ -167,6 +167,23 @@ pub struct Card {
     zip_code: String,
 }
 
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+pub struct Payout {
+    amount: f32,
+    currency: String,
+    date: String,
+    fee: f32,
+    id: u32,
+    reference: String,
+    status: String,
+    transaction_code: String,
+    #[serde(rename = "type")]
+    ty: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+pub struct Transaction {}
+
 pub struct SumUp {
     access_token: AccessToken,
     api: Api,
@@ -217,5 +234,9 @@ impl SumUp {
 
     pub fn merchant(&self) -> crate::services::Merchant {
         services::Merchant::new(&self.api, &self.access_token)
+    }
+
+    pub fn payouts(&self) -> crate::services::Payouts {
+        services::Payouts::new(&self.api, &self.access_token)
     }
 }

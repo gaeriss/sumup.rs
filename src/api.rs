@@ -234,4 +234,36 @@ impl Api {
             .into_json()
             .map_err(crate::Error::from)
     }
+
+    pub fn payouts_list(
+        &self,
+        filter: &crate::services::payouts::Filter,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::Payout>> {
+        ureq::get(&format!(
+            "{}?{}",
+            url!("/v0.1/me/financials/payouts"),
+            filter.to_string()
+        ))
+        .set("Authorization", &access_token.bearer())
+        .call()?
+        .into_json()
+        .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_list(
+        &self,
+        filter: &crate::services::payouts::Filter,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::Transaction>> {
+        ureq::get(&format!(
+            "{}?{}",
+            url!("/v0.1/me/financials/transactions"),
+            filter.to_string()
+        ))
+        .set("Authorization", &access_token.bearer())
+        .call()?
+        .into_json()
+        .map_err(crate::Error::from)
+    }
 }
