@@ -74,11 +74,86 @@ pub struct Address {
     #[serde(skip_serializing_if = "Option::is_none")]
     line1: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    address_line1: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     line2: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     state: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     postalcode: Option<String>,
+    post_code: Option<String>,
+    landline: Option<String>,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Profile {
+    merchant_code: String,
+    company_name: String,
+    legal_type: LegalType,
+    merchant_category_code: String,
+    address: Address,
+    business_owners: Vec<()>,
+    doing_business_as: DoingBusinessAs,
+    locale: String,
+    complete: bool,
+    extdev: bool,
+    country: String,
+    default_currency: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct LegalType {
+    id: u32,
+    full_description: String,
+    description: String,
+    sole_trader: bool,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct DoingBusinessAs {
+    business_name: String,
+    email: String,
+    dynamic_descriptor: String,
+    #[serde(skip_serializing)]
+    address: Address,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct BankAccount {
+    bank_code: String,
+    account_number: String,
+    account_holder_name: String,
+    status: String,
+    primary: bool,
+    // @TODO chrono::DateTime
+    created_at: String,
+    bank_name: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Settings {
+    tax_enabled: bool,
+    payout_type: String,
+    payout_period: String,
+    payout_on_demand_available: bool,
+    payout_on_demand: bool,
+    printers_enabled: bool,
+    payout_instrument: String,
+    moto_payment: String,
+    checkout_payments: String,
+    daily_payout_email: bool,
+    monthly_payout_email: bool,
+    gross_settlement: bool,
+    bank_account_change_blocked: bool,
+    operator_personal_profile_name: bool,
+    operator_personal_profile_date_of_birth: bool,
+    operator_personal_profile_address: bool,
+    operator_personal_profile_note: bool,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
@@ -138,5 +213,9 @@ impl SumUp {
 
     pub fn customer(&self) -> crate::services::Customer {
         services::Customer::new(&self.api, &self.access_token)
+    }
+
+    pub fn merchant(&self) -> crate::services::Merchant {
+        services::Merchant::new(&self.api, &self.access_token)
     }
 }

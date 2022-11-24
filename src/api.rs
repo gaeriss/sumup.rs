@@ -169,4 +169,69 @@ impl Api {
         .into_json()
         .map_err(crate::Error::from)
     }
+
+    pub fn profile_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Profile> {
+        ureq::get(url!("/v0.1/me/merchant-profile"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn profile_update(
+        &self,
+        profile: &crate::Profile,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result {
+        ureq::put(url!("/v0.1/me/merchant-profile"))
+            .set("Authorization", &access_token.bearer())
+            .send_json(profile)?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn profile_doing_business_as_get(
+        &self,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::DoingBusinessAs> {
+        ureq::get(url!("/v0.1/me/merchant-profile/doing-business-as"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn profile_doing_business_as_update(
+        &self,
+        dba: &crate::DoingBusinessAs,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::DoingBusinessAs> {
+        ureq::put(url!("/v0.1/me/merchant-profile/doing-business-as"))
+            .set("Authorization", &access_token.bearer())
+            .send_json(dba)?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn profile_bank_accounts(
+        &self,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::BankAccount>> {
+        ureq::get(url!("/v0.1/me/merchant-profile/bank-accounts"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn profile_settings(
+        &self,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Settings> {
+        ureq::get(url!("/v0.1/me/merchant-profile/settings"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
 }
