@@ -168,6 +168,7 @@ pub struct Card {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Payout {
     amount: f32,
     currency: String,
@@ -181,8 +182,189 @@ pub struct Payout {
     ty: String,
 }
 
+#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Transaction {
+    id: String,
+    transaction_code: String,
+    amount: f32,
+    currency: String,
+    timestamp: String,
+    status: Status,
+    payment_type: PaymentType,
+    installments_count: u32,
+    merchant_code: String,
+    vat_amount: f32,
+    tip_amount: f32,
+    entry_mode: String,
+    auth_code: String,
+    internal_id: String,
+    product_summary: String,
+    payouts_total: f32,
+    payouts_received: f32,
+    payout_plan: String,
+    username: String,
+    lat: f32,
+    long: f32,
+    horizontal_accuracy: f32,
+    simple_payment_type: PaymentType,
+    verification_method: String,
+    card: TransactionCard,
+    local_time: String,
+    payout_type: String,
+    products: Vec<Product>,
+    vat_rates: Vec<f32>,
+    transaction_events: Vec<TransactionEvent>,
+    simple_status: String,
+    links: Vec<Link>,
+    events: Vec<Event>,
+    location: Location,
+    tax_enabled: bool,
+}
+
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-pub struct Transaction {}
+#[serde(deny_unknown_fields)]
+pub struct TransactionCard {
+    last_4_digits: String,
+    #[serde(rename = "type")]
+    ty: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Product {
+    name: String,
+    price: f32,
+    vat_rate: f32,
+    single_vat_amount: f32,
+    price_with_vat: f32,
+    vat_amount: f32,
+    quantity: f32,
+    total_price: f32,
+    total_with_vat: f32,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct TransactionEvent {
+    id: u32,
+    event_type: String,
+    status: String,
+    amount: f32,
+    due_date: String,
+    date: String,
+    installment_number: u32,
+    timestamp: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Link {
+    rel: String,
+    href: String,
+    #[serde(rename = "type")]
+    ty: String,
+    min_amount: Option<f32>,
+    max_amount: Option<f32>,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Event {
+    id: u32,
+    transaction_id: String,
+    #[serde(rename = "type")]
+    ty: String,
+    status: String,
+    amount: f32,
+    timestamp: String,
+    fee_amount: f32,
+    installment_number: u32,
+    deducted_amount: f32,
+    deducted_fee_amount: f32,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Location {
+    lat: f32,
+    long: f32,
+    horizontal_accuracy: f32,
+}
+
+#[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "UPPERCASE")]
+enum Status {
+    Successful,
+    Cancelled,
+    Failed,
+    Refunded,
+    ChargeBack,
+}
+
+impl ToString for Status {
+    fn to_string(&self) -> String {
+        match self {
+            Status::Successful => "SUCCESSFUL",
+            Status::Cancelled => "CANCELLED",
+            Status::Failed => "FAILED",
+            Status::Refunded => "REFUNDED",
+            Status::ChargeBack => "CHARGE_BACK",
+        }
+        .to_string()
+    }
+}
+
+#[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "UPPERCASE")]
+enum PaymentType {
+    Cash,
+    Pos,
+    Ecom,
+    Balance,
+    Moto,
+    Boleto,
+    Unknown,
+}
+
+impl ToString for PaymentType {
+    fn to_string(&self) -> String {
+        match self {
+            PaymentType::Cash => "CASH",
+            PaymentType::Pos => "POS",
+            PaymentType::Ecom => "ECOM",
+            PaymentType::Balance => "BALANCE",
+            PaymentType::Moto => "MOTO",
+            PaymentType::Boleto => "BOLETO",
+            PaymentType::Unknown => "UNKNOWN",
+        }
+        .to_string()
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+enum Type {
+    Payment,
+    Refund,
+    ChargeBack,
+}
+
+impl ToString for Type {
+    fn to_string(&self) -> String {
+        match self {
+            Type::Payment => "PAYMENT",
+            Type::Refund => "REFUND",
+            Type::ChargeBack => "CHARGE_BACK",
+        }
+        .to_string()
+    }
+}
+
+#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Receipt {
+    transaction_data: Transaction,
+}
 
 pub struct SumUp {
     access_token: AccessToken,
@@ -238,5 +420,9 @@ impl SumUp {
 
     pub fn payouts(&self) -> crate::services::Payouts {
         services::Payouts::new(&self.api, &self.access_token)
+    }
+
+    pub fn transactions(&self) -> crate::services::Transactions {
+        services::Transactions::new(&self.api, &self.access_token)
     }
 }

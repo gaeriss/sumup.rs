@@ -3,7 +3,7 @@ pub struct Api {}
 
 macro_rules! url {
     ($path:literal) => {
-        concat!("https://api.sumup.com/v1.0", $path)
+        concat!("https://api.sumup.com", $path)
     };
     ($path:literal, $( $param:expr ),+ ) => {
         &vec![
@@ -265,5 +265,89 @@ impl Api {
         .call()?
         .into_json()
         .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_get(
+        &self,
+        id: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Transaction> {
+        ureq::get(&format!("{}?id={id}", url!("/v0.1/me/transactions")))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_get_by_internal_id(
+        &self,
+        internal_id: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Transaction> {
+        ureq::get(&format!(
+            "{}?internal_id={internal_id}",
+            url!("/v0.1/me/transactions")
+        ))
+        .set("Authorization", &access_token.bearer())
+        .call()?
+        .into_json()
+        .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_get_by_code(
+        &self,
+        transaction_code: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Transaction> {
+        ureq::get(&format!(
+            "{}?transaction_code={transaction_code}",
+            url!("/v0.1/me/transactions")
+        ))
+        .set("Authorization", &access_token.bearer())
+        .call()?
+        .into_json()
+        .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_history(
+        &self,
+        filter: &crate::services::transactions::Filter,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::Transaction>> {
+        ureq::get(&format!(
+            "{}?{}",
+            url!("/v0.1/me/financials/payouts"),
+            filter.to_string()
+        ))
+        .set("Authorization", &access_token.bearer())
+        .call()?
+        .into_json()
+        .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_refund(
+        &self,
+        id: u32,
+        payload: impl serde::Serialize,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result {
+        ureq::get(url!("/v0.1/me/refund", id))
+            .set("Authorization", &access_token.bearer())
+            .send_json(payload)?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn transactions_get_receipt(
+        &self,
+        id: u32,
+        merchant_id: u32,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Receipt> {
+        ureq::get(&format!("{}?mid={merchant_id}", url!("/receipts", id)))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
     }
 }
