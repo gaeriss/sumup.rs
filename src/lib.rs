@@ -21,6 +21,22 @@ pub struct AccessToken {
     pub(crate) refresh_token: Option<String>,
 }
 
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+pub struct Checkout {
+    amount: f32,
+    currency: String,
+    checkout_reference: String,
+    merchant_code: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pay_to_email: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pay_from_email: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    return_url: Option<String>,
+}
+
 pub struct SumUp {
     access_token: AccessToken,
     api: Api,
@@ -59,5 +75,9 @@ impl SumUp {
 
     pub fn authorization(&self) -> crate::services::Authorization {
         services::Authorization::new(&self.api, &self.config)
+    }
+
+    pub fn checkout(&self) -> crate::services::Checkout {
+        services::Checkout::new(&self.api, &self.access_token)
     }
 }

@@ -11,4 +11,45 @@ impl Api {
 
         Ok(token)
     }
+
+    pub fn checkout_create(
+        &self,
+        payload: impl serde::Serialize,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result {
+        todo!()
+    }
+
+    pub fn checkout_get(
+        &self,
+        id: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Checkout> {
+        todo!()
+    }
+
+    pub fn checkout_reference_id(
+        &self,
+        refence_id: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Checkout> {
+        todo!()
+    }
+
+    pub fn checkout_delete(
+        &self,
+        id: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Checkout> {
+        todo!()
+    }
+
+    pub fn checkout_update(
+        &self,
+        id: &str,
+        payload: impl serde::Serialize,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::Checkout> {
+        todo!()
+    }
 }
