@@ -1,0 +1,111 @@
+#[derive(Clone, Debug)]
+pub struct Authorization<'a> {
+    api: &'a crate::Api,
+    config: &'a crate::Config,
+}
+
+impl<'a> Authorization<'a> {
+    pub fn new(api: &'a crate::Api, config: &'a crate::Config) -> Self {
+        Self { api, config }
+    }
+
+    pub fn token(&self) -> crate::Result<AccessToken> {
+        let token = if let Some(access_token) = &self.config.access_token {
+            AccessToken {
+                value: Some(access_token.clone()),
+                scope: self.config.scopes.clone(),
+                refresh_token: self.config.refresh_token.clone(),
+                expires_in: Some(0),
+
+                ..Default::default()
+            }
+        } else if let Some(refresh_token) = &self.config.refresh_token {
+            AccessToken {
+                scope: self.config.scopes.clone(),
+                refresh_token: Some(refresh_token.clone()),
+                expires_in: Some(0),
+
+                ..Default::default()
+            }
+        } else {
+            use crate::config::GrantType::*;
+
+            match self.config.grant_type {
+                AuthorizationCode => self.token_by_code()?,
+                ClientCredentials => self.token_by_client_credentials()?,
+                Password => self.token_password()?,
+            }
+        };
+
+        Ok(token)
+    }
+
+    fn token_by_code(&self) -> crate::Result<AccessToken> {
+        let payload = ureq::json!({
+            "grant_type": "authorization_code",
+            "client_id": self.config.app_id,
+            "client_secret": self.config.app_secret,
+            "scope": self.config.scopes()?,
+            "code": self.config.code,
+        });
+
+        self.api.token(&payload)
+    }
+
+    fn token_by_client_credentials(&self) -> crate::Result<AccessToken> {
+        let payload = ureq::json!({
+            "grant_type": "client_credentials",
+            "client_id": self.config.app_id,
+            "client_secret": self.config.app_secret,
+            "scope": self.config.scopes()?,
+        });
+
+        self.api.token(&payload)
+    }
+
+    fn token_password(&self) -> crate::Result<AccessToken> {
+        let username = match &self.config.username {
+            Some(username) => username,
+            None => return Err(crate::Error::Auth("Missing username configuration")),
+        };
+
+        let password = match &self.config.password {
+            Some(password) => password,
+            None => return Err(crate::Error::Auth("Missing password configuration")),
+        };
+
+        let payload = ureq::json!({
+            "grant_type": "password",
+            "client_id": self.config.app_id,
+            "client_secret": self.config.app_secret,
+            "scope": self.config.scopes()?,
+            "username": username,
+            "password": password,
+        });
+
+        self.api.token(&payload)
+    }
+
+    pub(crate) fn refresh_token(&self, refresh_token: &str) -> crate::Result<AccessToken> {
+        let payload = ureq::json!({
+            "grant_type": "refresh_token",
+            "client_id": self.config.app_id,
+            "client_secret": self.config.app_secret,
+            "scope": self.config.scopes()?,
+            "refresh_token": refresh_token,
+        });
+
+        self.api.token(&payload)
+    }
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AccessToken {
+    value: Option<String>,
+    r#type: String,
+    /** The number of seconds the access token will be valid. */
+    expires_in: Option<u32>,
+    scope: Vec<crate::config::Scope>,
+    pub(crate) refresh_token: Option<String>,
+}
