@@ -12,7 +12,7 @@ impl<'a> Authorization<'a> {
     pub fn token(&self) -> crate::Result<crate::AccessToken> {
         let token = if let Some(access_token) = &self.config.access_token {
             crate::AccessToken {
-                value: Some(access_token.clone()),
+                access_token: access_token.clone(),
                 scope: self.config.scopes.clone(),
                 refresh_token: self.config.refresh_token.clone(),
                 expires_in: Some(0),

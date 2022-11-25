@@ -13,8 +13,8 @@ use config::Config;
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AccessToken {
-    value: Option<String>,
-    r#type: String,
+    access_token: String,
+    token_type: String,
     /** The number of seconds the access token will be valid. */
     expires_in: Option<u32>,
     scope: crate::config::Scopes,
@@ -23,7 +23,7 @@ pub struct AccessToken {
 
 impl AccessToken {
     pub fn bearer(&self) -> String {
-        format!("Bearer {}", self.value.as_deref().unwrap_or_default())
+        format!("Bearer {}", self.access_token)
     }
 }
 
@@ -373,8 +373,8 @@ pub struct SumUp {
 }
 
 impl SumUp {
-    pub fn new(app_id: &str, app_secret: &str, code: &str) -> Result<Self> {
-        let config = Config::new(app_id, app_secret, code);
+    pub fn new(client_id: &str, client_secret: &str, code: &str) -> Result<Self> {
+        let config = Config::new(client_id, client_secret, code);
 
         Self::from(config)
     }
