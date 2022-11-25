@@ -17,7 +17,7 @@ pub struct AccessToken {
     r#type: String,
     /** The number of seconds the access token will be valid. */
     expires_in: Option<u32>,
-    scope: Vec<crate::config::Scope>,
+    scope: crate::config::Scopes,
     pub(crate) refresh_token: Option<String>,
 }
 

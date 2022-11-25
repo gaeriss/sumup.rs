@@ -6,6 +6,8 @@ pub enum Error {
     Api(#[from] Box<ureq::Error>),
     #[error("{0}")]
     Auth(&'static str),
+    #[error("Invalid scope: {0}")]
+    InvalidScope(String),
     #[error("{0}")]
     Io(#[from] std::io::Error),
     #[error("{0}")]

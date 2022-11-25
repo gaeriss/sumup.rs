@@ -45,7 +45,6 @@ impl<'a> Authorization<'a> {
             "grant_type": "authorization_code",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
-            "scope": self.config.scopes()?,
             "code": self.config.code,
         });
 
@@ -57,7 +56,7 @@ impl<'a> Authorization<'a> {
             "grant_type": "client_credentials",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
-            "scope": self.config.scopes()?,
+            "scope": self.config.scopes,
         });
 
         self.api.token(&payload)
@@ -78,7 +77,7 @@ impl<'a> Authorization<'a> {
             "grant_type": "password",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
-            "scope": self.config.scopes()?,
+            "scope": self.config.scopes,
             "username": username,
             "password": password,
         });
@@ -91,7 +90,7 @@ impl<'a> Authorization<'a> {
             "grant_type": "refresh_token",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
-            "scope": self.config.scopes()?,
+            "scope": self.config.scopes,
             "refresh_token": refresh_token,
         });
 
