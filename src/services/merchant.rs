@@ -37,3 +37,57 @@ impl<'a> Merchant<'a> {
         self.api.profile_settings(self.access_token)
     }
 }
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn profile() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.merchant().profile()?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn update_profile() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let mut profile = api.merchant().profile()?;
+        profile.default_currency = "USD".to_string();
+
+        api.merchant().update_profile(&profile)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn doing_business_as() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let mut dba = api.merchant().doing_business_as()?;
+        dba.dynamic_descriptor = "Update".to_string();
+
+        api.merchant().update_doing_business_as(&dba)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn bank_accounts() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.merchant().bank_accounts()?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn settings() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.merchant().settings()?;
+
+        Ok(())
+    }
+}

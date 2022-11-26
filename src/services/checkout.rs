@@ -51,3 +51,62 @@ impl<'a> Checkout<'a> {
         self.api.checkout_update(id, &payload, self.access_token)
     }
 }
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn create() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let profile = api.merchant().profile()?;
+
+        let checkout = crate::Checkout {
+            amount: 2.2,
+            currency: "EUR".to_string(),
+            checkout_reference: "1".to_string(),
+            merchant_code: profile.merchant_code,
+
+            ..Default::default()
+        };
+
+        api.checkout().create(&checkout)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn find_by_id() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.checkout().find_by_id("1")?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn find_by_reference_id() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.checkout().find_by_reference_id("1")?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn delete() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.checkout().delete("1")?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn pay() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.checkout().pay("1", "1", "1", None)?;
+
+        Ok(())
+    }
+}

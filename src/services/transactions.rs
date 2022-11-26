@@ -121,3 +121,79 @@ impl ToString for Filter {
         v.join("&")
     }
 }
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn find_by_id() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.transactions().find_by_id("1")?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn find_by_code() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.transactions().find_by_code("1234")?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn find_by_internal_id() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.transactions().find_by_internal_id("1234")?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn history() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let filter = crate::services::transactions::Filter {
+            start_date: "2021-01-01".to_string(),
+            end_date: "2021-12-31".to_string(),
+
+            ..Default::default()
+        };
+
+        let history = api.transactions().history(&filter)?;
+        if history.is_empty() {
+            log::warn!("Empty response");
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn full_refund() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.transactions().full_refund(1)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn refund() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.transactions().refund(1, 1.2)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn receipt() -> crate::Result {
+        let api = crate::test::api()?;
+
+        api.transactions().receipt(1, 1)?;
+
+        Ok(())
+    }
+}

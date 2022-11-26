@@ -38,3 +38,44 @@ impl ToString for Filter {
         )
     }
 }
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn payouts() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let filter = crate::services::payouts::Filter {
+            start_date: "2021-01-01".to_string(),
+            end_date: "2021-01-12".to_string(),
+            limit: Some(20),
+            descending_order: true,
+        };
+
+        let payouts = api.payouts().payouts(&filter)?;
+        if payouts.is_empty() {
+            log::warn!("Empty response");
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn transactions() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let filter = crate::services::payouts::Filter {
+            start_date: "2021-01-01".to_string(),
+            end_date: "2021-01-12".to_string(),
+            limit: Some(20),
+            descending_order: true,
+        };
+
+        let transactions = api.payouts().transactions(&filter)?;
+        if transactions.is_empty() {
+            log::warn!("Empty response");
+        }
+
+        Ok(())
+    }
+}

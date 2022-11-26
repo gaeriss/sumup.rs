@@ -32,6 +32,11 @@ jobs:
 
   tests:
     name: Tests
+    env:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
     strategy:
       matrix:
         mode: ["debug", "release"]

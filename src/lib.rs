@@ -10,7 +10,7 @@ pub use errors::*;
 use api::Api;
 use config::Config;
 
-#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AccessToken {
     access_token: String,
@@ -424,5 +424,46 @@ impl SumUp {
 
     pub fn transactions(&self) -> crate::services::Transactions {
         services::Transactions::new(&self.api, &self.access_token)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    static INIT: std::sync::Once = std::sync::Once::new();
+
+    pub(crate) fn api() -> crate::Result<crate::SumUp> {
+        INIT.call_once(|| {
+            dotenv::dotenv().ok();
+            env_logger::init();
+        });
+
+        let config = crate::Config {
+            client_id: std::env::var("CLIENT_ID").unwrap(),
+            client_secret: std::env::var("CLIENT_SECRET").unwrap(),
+            username: std::env::var("USERNAME").ok(),
+            password: std::env::var("PASSWORD").ok(),
+            grant_type: crate::config::GrantType::Password,
+
+            ..Default::default()
+        };
+
+        crate::SumUp::from(config)
+    }
+
+    #[test]
+    fn new() -> crate::Result {
+        api().map(|_| ())
+    }
+
+    #[test]
+    fn refresh_token() -> crate::Result {
+        let mut api = api()?;
+        let access_token = api.access_token.clone();
+
+        api.refresh_token(None)?;
+
+        assert_ne!(access_token, api.access_token);
+
+        Ok(())
     }
 }
