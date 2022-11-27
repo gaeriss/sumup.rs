@@ -9,6 +9,9 @@ impl<'a> Transactions<'a> {
         Self { api, access_token }
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/retrieve-a-transaction/>
+     */
     pub fn find_by_id(&self, id: &str) -> crate::Result<crate::Transaction> {
         self.api.transactions_get(id, self.access_token)
     }
@@ -22,16 +25,25 @@ impl<'a> Transactions<'a> {
         self.api.transactions_get_by_code(code, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/list-transactions/>
+     */
     pub fn history(&self, filter: &Filter) -> crate::Result<Vec<crate::Transaction>> {
         self.api.transactions_history(filter, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/refund-a-transaction/>
+     */
     pub fn full_refund(&self, id: u32) -> crate::Result {
         let payload = ureq::json!({});
 
         self.api.transactions_refund(id, payload, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/refund-a-transaction/>
+     */
     pub fn refund(&self, id: u32, amount: f32) -> crate::Result {
         let payload = ureq::json!({
             "amount": amount,
@@ -40,6 +52,9 @@ impl<'a> Transactions<'a> {
         self.api.transactions_refund(id, payload, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/retrieve-receipt-details/>
+     */
     pub fn receipt(&self, id: u32, merchant_id: u32) -> crate::Result<crate::Receipt> {
         self.api
             .transactions_get_receipt(id, merchant_id, self.access_token)

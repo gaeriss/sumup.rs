@@ -393,6 +393,9 @@ impl SumUp {
         Ok(sumup)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/generate-a-token/>
+     */
     pub fn refresh_token(&mut self, refresh_token: Option<&str>) -> crate::Result {
         let refresh_token = refresh_token
             .or(self.access_token.refresh_token.as_deref())
@@ -402,18 +405,30 @@ impl SumUp {
         Ok(())
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/authorization/>
+     */
     pub fn authorization(&self) -> crate::services::Authorization {
         services::Authorization::new(&self.api, &self.config)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/checkouts/>
+     */
     pub fn checkout(&self) -> crate::services::Checkout {
         services::Checkout::new(&self.api, &self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/customers/>
+     */
     pub fn customer(&self) -> crate::services::Customer {
         services::Customer::new(&self.api, &self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/merchant-account/>
+     */
     pub fn merchant(&self) -> crate::services::Merchant {
         services::Merchant::new(&self.api, &self.access_token)
     }
@@ -422,6 +437,9 @@ impl SumUp {
         services::Payouts::new(&self.api, &self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/transactions/>
+     */
     pub fn transactions(&self) -> crate::services::Transactions {
         services::Transactions::new(&self.api, &self.access_token)
     }

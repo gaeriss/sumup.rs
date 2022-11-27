@@ -17,6 +17,9 @@ impl<'a> Merchant<'a> {
         self.api.profile_update(profile, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/retrieve-dba/>
+     */
     pub fn doing_business_as(&self) -> crate::Result<crate::DoingBusinessAs> {
         self.api.profile_doing_business_as_get(self.access_token)
     }
@@ -29,10 +32,16 @@ impl<'a> Merchant<'a> {
             .profile_doing_business_as_update(dba, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/list-bank-accounts/>
+     */
     pub fn bank_accounts(&self) -> crate::Result<Vec<crate::BankAccount>> {
         self.api.profile_bank_accounts(self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/list-settings/>
+     */
     pub fn settings(&self) -> crate::Result<crate::Settings> {
         self.api.profile_settings(self.access_token)
     }

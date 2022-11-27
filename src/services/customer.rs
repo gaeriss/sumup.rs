@@ -9,24 +9,39 @@ impl<'a> Customer<'a> {
         Self { api, access_token }
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/create-a-customer/>
+     */
     pub fn create(&self, customer: &crate::Customer) -> crate::Result {
         self.api.customer_create(customer, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/update-a-customer/>
+     */
     pub fn update(&self, customer: &crate::Customer) -> crate::Result<crate::Customer> {
         self.api
             .customer_update(&customer.customer_id, &customer, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/retrieve-a-customer/>
+     */
     pub fn get(&self, id: &str) -> crate::Result<crate::Customer> {
         self.api.customer_get(id, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/list-payment-instruments/>
+     */
     pub fn payment_instruments(&self, customer_id: &str) -> crate::Result<Vec<crate::Card>> {
         self.api
             .customer_payment_instruments(customer_id, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/create-a-payment-instrument/>
+     */
     pub fn create_payment_instruments(
         &self,
         customer_id: &str,
@@ -40,6 +55,9 @@ impl<'a> Customer<'a> {
             .customer_create_payment_instruments(customer_id, &payload, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/deactivate-a-payment-instrument/>
+     */
     pub fn delete_payment_instruments(&self, customer_id: &str, card_token: &str) -> crate::Result {
         self.api
             .customer_delete_payment_instruments(customer_id, card_token, self.access_token)

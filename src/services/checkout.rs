@@ -9,18 +9,30 @@ impl<'a> Checkout<'a> {
         Self { api, access_token }
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/get-available-payment-methods/>
+     */
     pub fn payment_methods(&self) -> crate::Result<crate::PaymentMethod> {
         todo!()
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/create-a-checkout/>
+     */
     pub fn create(&self, checkout: &crate::Checkout) -> crate::Result {
         self.api.checkout_create(checkout, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/list-checkouts/>
+     */
     pub fn list(&self) -> crate::Result<Vec<crate::Checkout>> {
         todo!()
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/retrieve-a-checkout/>
+     */
     pub fn find_by_id(&self, id: &str) -> crate::Result<crate::Checkout> {
         self.api.checkout_get(id, self.access_token)
     }
@@ -30,10 +42,16 @@ impl<'a> Checkout<'a> {
             .checkout_reference_id(reference_id, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/deactivate-a-checkout/>
+     */
     pub fn delete(&self, id: &str) -> crate::Result {
         self.api.checkout_delete(id, self.access_token)
     }
 
+    /**
+     * <https://developer.sumup.com/docs/api/process-a-checkout/>
+     */
     pub fn pay(
         &self,
         id: &str,
