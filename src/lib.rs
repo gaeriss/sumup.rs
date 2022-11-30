@@ -27,6 +27,39 @@ impl AccessToken {
     }
 }
 
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Account {
+    account: AccountInfo,
+    personal_profile: PersonalProfile,
+    merchant_profile: Profile,
+    requirements: Vec<String>,
+    verifications: Vec<String>,
+    is_migrated_payleven_br: bool,
+    signup_time: String,
+    details_submitted: bool,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AccountInfo {
+    username: String,
+    #[serde(rename = "type")]
+    ty: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PersonalProfile {
+    first_name: String,
+    last_name: String,
+    date_of_birth: String,
+    mobile_phone: Option<String>,
+    address: Address,
+    national_id: String,
+    complete: bool,
+}
+
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Checkout {
     amount: f32,
@@ -403,6 +436,13 @@ impl SumUp {
         self.access_token = self.authorization().refresh_token(refresh_token)?;
 
         Ok(())
+    }
+
+    /**
+     * <https://developer.sumup.com/docs/api/account-details/>
+     */
+    pub fn account(&self) -> crate::services::Account {
+        services::Account::new(&self.api, &self.access_token)
     }
 
     /**

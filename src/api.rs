@@ -25,6 +25,14 @@ impl Api {
             .map_err(crate::Error::from)
     }
 
+    pub fn account_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Account> {
+        ureq::get(url!("/v0.1/me"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
     pub fn checkout_create(
         &self,
         payload: impl serde::Serialize,
