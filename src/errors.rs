@@ -33,7 +33,7 @@ pub enum Response {
 }
 
 #[derive(Debug, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Message {
     message: String,
     instance: Option<String>,

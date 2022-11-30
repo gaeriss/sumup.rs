@@ -11,7 +11,7 @@ use api::Api;
 use config::Config;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct AccessToken {
     access_token: String,
     token_type: String,
@@ -28,7 +28,7 @@ impl AccessToken {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Account {
     account: AccountInfo,
     personal_profile: PersonalProfile,
@@ -41,7 +41,7 @@ pub struct Account {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct AccountInfo {
     username: String,
     #[serde(rename = "type")]
@@ -49,7 +49,7 @@ pub struct AccountInfo {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct PersonalProfile {
     first_name: String,
     last_name: String,
@@ -98,7 +98,7 @@ pub struct Details {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Address {
     #[serde(skip_serializing_if = "Option::is_none")]
     city: Option<String>,
@@ -119,7 +119,7 @@ pub struct Address {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Profile {
     merchant_code: String,
     company_name: String,
@@ -136,7 +136,7 @@ pub struct Profile {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct LegalType {
     id: u32,
     full_description: String,
@@ -145,7 +145,7 @@ pub struct LegalType {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct DoingBusinessAs {
     business_name: String,
     email: String,
@@ -155,7 +155,7 @@ pub struct DoingBusinessAs {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct BankAccount {
     bank_code: String,
     account_number: String,
@@ -168,7 +168,7 @@ pub struct BankAccount {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Settings {
     tax_enabled: bool,
     payout_type: String,
@@ -190,7 +190,7 @@ pub struct Settings {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Card {
     name: String,
     number: String,
@@ -201,7 +201,7 @@ pub struct Card {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Payout {
     amount: f32,
     currency: String,
@@ -216,7 +216,7 @@ pub struct Payout {
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Transaction {
     id: String,
     transaction_code: String,
@@ -256,7 +256,7 @@ pub struct Transaction {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct TransactionCard {
     last_4_digits: String,
     #[serde(rename = "type")]
@@ -264,7 +264,7 @@ pub struct TransactionCard {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Product {
     name: String,
     price: f32,
@@ -278,7 +278,7 @@ pub struct Product {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct TransactionEvent {
     id: u32,
     event_type: String,
@@ -291,7 +291,7 @@ pub struct TransactionEvent {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Link {
     rel: String,
     href: String,
@@ -302,7 +302,7 @@ pub struct Link {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Event {
     id: u32,
     transaction_id: String,
@@ -318,7 +318,7 @@ pub struct Event {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Location {
     lat: f32,
     long: f32,
@@ -394,19 +394,19 @@ impl ToString for Type {
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Receipt {
     transaction_data: Transaction,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct PaymentMethod {
     id: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct SubAccount {
     account_type: String,
     created_at: String,
@@ -418,7 +418,7 @@ pub struct SubAccount {
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Permissions {
     create_moto_payments: bool,
     create_referral: bool,
