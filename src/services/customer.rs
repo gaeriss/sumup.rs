@@ -21,7 +21,7 @@ impl<'a> Customer<'a> {
      */
     pub fn update(&self, customer: &crate::Customer) -> crate::Result<crate::Customer> {
         self.api
-            .customer_update(&customer.customer_id, &customer, self.access_token)
+            .customer_update(&customer.customer_id, customer, self.access_token)
     }
 
     /**
