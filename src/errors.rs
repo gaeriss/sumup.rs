@@ -35,13 +35,13 @@ pub enum Response {
 #[derive(Debug, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Message {
-    message: String,
-    instance: Option<String>,
-    error_code: Option<String>,
-    param: Option<String>,
+    pub message: String,
+    pub instance: Option<String>,
+    pub error_code: Option<String>,
+    pub param: Option<String>,
     #[serde(rename = "type")]
-    ty: Option<String>,
-    title: Option<String>,
-    status: Option<u8>,
-    detail: Option<String>,
+    pub ty: Option<String>,
+    pub title: Option<String>,
+    pub status: Option<u8>,
+    pub detail: Option<String>,
 }

@@ -13,12 +13,12 @@ use config::Config;
 #[derive(Clone, Debug, Default, Eq, PartialEq, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct AccessToken {
-    access_token: String,
-    token_type: String,
+    pub access_token: String,
+    pub token_type: String,
     /** The number of seconds the access token will be valid. */
-    expires_in: Option<u32>,
-    scope: crate::config::Scopes,
-    pub(crate) refresh_token: Option<String>,
+    pub expires_in: Option<u32>,
+    pub scope: crate::config::Scopes,
+    pub refresh_token: Option<String>,
 }
 
 impl AccessToken {
@@ -30,304 +30,303 @@ impl AccessToken {
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Account {
-    account: AccountInfo,
-    personal_profile: PersonalProfile,
-    merchant_profile: Profile,
-    requirements: Vec<String>,
-    verifications: Vec<String>,
-    is_migrated_payleven_br: bool,
-    signup_time: String,
-    details_submitted: bool,
+    pub account: AccountInfo,
+    pub personal_profile: PersonalProfile,
+    pub merchant_profile: Profile,
+    pub requirements: Vec<String>,
+    pub verifications: Vec<String>,
+    pub is_migrated_payleven_br: bool,
+    pub signup_time: String,
+    pub details_submitted: bool,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct AccountInfo {
-    username: String,
+    pub username: String,
     #[serde(rename = "type")]
-    ty: String,
+    pub ty: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct PersonalProfile {
-    first_name: String,
-    last_name: String,
-    date_of_birth: String,
-    mobile_phone: Option<String>,
-    address: Address,
-    national_id: String,
-    complete: bool,
+    pub first_name: String,
+    pub last_name: String,
+    pub date_of_birth: String,
+    pub mobile_phone: Option<String>,
+    pub address: Address,
+    pub national_id: String,
+    pub complete: bool,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Checkout {
-    amount: f32,
-    currency: String,
-    checkout_reference: String,
-    merchant_code: String,
+    pub amount: f32,
+    pub currency: String,
+    pub checkout_reference: String,
+    pub merchant_code: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pay_to_email: Option<String>,
+    pub pay_to_email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    description: Option<String>,
+    pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pay_from_email: Option<String>,
+    pub pay_from_email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    return_url: Option<String>,
+    pub return_url: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Customer {
-    customer_id: String,
+    pub customer_id: String,
     #[serde(default)]
-    personal_detail: Details,
+    pub personal_detail: Details,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Details {
     #[serde(skip_serializing_if = "Option::is_none")]
-    first_name: Option<String>,
+    pub first_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    last_name: Option<String>,
+    pub last_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    email: Option<String>,
+    pub email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    phone: Option<String>,
+    pub phone: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    address: Option<Address>,
+    pub address: Option<Address>,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Address {
     #[serde(skip_serializing_if = "Option::is_none")]
-    city: Option<String>,
+    pub city: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    country: Option<String>,
+    pub country: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    line1: Option<String>,
+    pub line1: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    address_line1: Option<String>,
+    pub address_line1: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    line2: Option<String>,
+    pub line2: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    state: Option<String>,
+    pub state: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    postalcode: Option<String>,
-    post_code: Option<String>,
-    landline: Option<String>,
+    pub postalcode: Option<String>,
+    pub post_code: Option<String>,
+    pub landline: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Profile {
-    merchant_code: String,
-    company_name: String,
-    legal_type: LegalType,
-    merchant_category_code: String,
-    address: Address,
-    business_owners: Vec<()>,
-    doing_business_as: DoingBusinessAs,
-    locale: String,
-    complete: bool,
-    extdev: bool,
-    country: String,
-    default_currency: String,
+    pub merchant_code: String,
+    pub company_name: String,
+    pub legal_type: LegalType,
+    pub merchant_category_code: String,
+    pub address: Address,
+    pub business_owners: Vec<()>,
+    pub doing_business_as: DoingBusinessAs,
+    pub locale: String,
+    pub complete: bool,
+    pub extdev: bool,
+    pub country: String,
+    pub default_currency: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct LegalType {
-    id: u32,
-    full_description: String,
-    description: String,
-    sole_trader: bool,
+    pub id: u32,
+    pub full_description: String,
+    pub description: String,
+    pub sole_trader: bool,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct DoingBusinessAs {
-    business_name: String,
-    email: String,
-    dynamic_descriptor: String,
+    pub business_name: String,
+    pub email: String,
+    pub dynamic_descriptor: String,
     #[serde(skip_serializing)]
-    address: Address,
+    pub address: Address,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct BankAccount {
-    bank_code: String,
-    account_number: String,
-    account_holder_name: String,
-    status: String,
-    primary: bool,
-    // @TODO chrono::DateTime
-    created_at: String,
-    bank_name: String,
+    pub bank_code: String,
+    pub account_number: String,
+    pub account_holder_name: String,
+    pub status: String,
+    pub primary: bool,
+    pub created_at: String,
+    pub bank_name: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Settings {
-    tax_enabled: bool,
-    payout_type: String,
-    payout_period: String,
-    payout_on_demand_available: bool,
-    payout_on_demand: bool,
-    printers_enabled: bool,
-    payout_instrument: String,
-    moto_payment: String,
-    checkout_payments: String,
-    daily_payout_email: bool,
-    monthly_payout_email: bool,
-    gross_settlement: bool,
-    bank_account_change_blocked: bool,
-    operator_personal_profile_name: bool,
-    operator_personal_profile_date_of_birth: bool,
-    operator_personal_profile_address: bool,
-    operator_personal_profile_note: bool,
+    pub tax_enabled: bool,
+    pub payout_type: String,
+    pub payout_period: String,
+    pub payout_on_demand_available: bool,
+    pub payout_on_demand: bool,
+    pub printers_enabled: bool,
+    pub payout_instrument: String,
+    pub moto_payment: String,
+    pub checkout_payments: String,
+    pub daily_payout_email: bool,
+    pub monthly_payout_email: bool,
+    pub gross_settlement: bool,
+    pub bank_account_change_blocked: bool,
+    pub operator_personal_profile_name: bool,
+    pub operator_personal_profile_date_of_birth: bool,
+    pub operator_personal_profile_address: bool,
+    pub operator_personal_profile_note: bool,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Card {
-    name: String,
-    number: String,
-    expiry_year: String,
-    expiry_month: String,
-    cvv: String,
-    zip_code: String,
+    pub name: String,
+    pub number: String,
+    pub expiry_year: String,
+    pub expiry_month: String,
+    pub cvv: String,
+    pub zip_code: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Payout {
-    amount: f32,
-    currency: String,
-    date: String,
-    fee: f32,
-    id: u32,
-    reference: String,
-    status: String,
-    transaction_code: String,
+    pub amount: f32,
+    pub currency: String,
+    pub date: String,
+    pub fee: f32,
+    pub id: u32,
+    pub reference: String,
+    pub status: String,
+    pub transaction_code: String,
     #[serde(rename = "type")]
-    ty: String,
+    pub ty: String,
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Transaction {
-    id: String,
-    transaction_code: String,
-    amount: f32,
-    currency: String,
-    timestamp: String,
-    status: Status,
-    payment_type: PaymentType,
-    installments_count: u32,
-    merchant_code: String,
-    vat_amount: f32,
-    tip_amount: f32,
-    entry_mode: String,
-    auth_code: String,
-    internal_id: String,
-    product_summary: String,
-    payouts_total: f32,
-    payouts_received: f32,
-    payout_plan: String,
-    username: String,
-    lat: f32,
-    long: f32,
-    horizontal_accuracy: f32,
-    simple_payment_type: PaymentType,
-    verification_method: String,
-    card: TransactionCard,
-    local_time: String,
-    payout_type: String,
-    products: Vec<Product>,
-    vat_rates: Vec<f32>,
-    transaction_events: Vec<TransactionEvent>,
-    simple_status: String,
-    links: Vec<Link>,
-    events: Vec<Event>,
-    location: Location,
-    tax_enabled: bool,
+    pub id: String,
+    pub transaction_code: String,
+    pub amount: f32,
+    pub currency: String,
+    pub timestamp: String,
+    pub status: Status,
+    pub payment_type: PaymentType,
+    pub installments_count: u32,
+    pub merchant_code: String,
+    pub vat_amount: f32,
+    pub tip_amount: f32,
+    pub entry_mode: String,
+    pub auth_code: String,
+    pub internal_id: String,
+    pub product_summary: String,
+    pub payouts_total: f32,
+    pub payouts_received: f32,
+    pub payout_plan: String,
+    pub username: String,
+    pub lat: f32,
+    pub long: f32,
+    pub horizontal_accuracy: f32,
+    pub simple_payment_type: PaymentType,
+    pub verification_method: String,
+    pub card: TransactionCard,
+    pub local_time: String,
+    pub payout_type: String,
+    pub products: Vec<Product>,
+    pub vat_rates: Vec<f32>,
+    pub transaction_events: Vec<TransactionEvent>,
+    pub simple_status: String,
+    pub links: Vec<Link>,
+    pub events: Vec<Event>,
+    pub location: Location,
+    pub tax_enabled: bool,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct TransactionCard {
-    last_4_digits: String,
+    pub last_4_digits: String,
     #[serde(rename = "type")]
-    ty: String,
+    pub ty: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Product {
-    name: String,
-    price: f32,
-    vat_rate: f32,
-    single_vat_amount: f32,
-    price_with_vat: f32,
-    vat_amount: f32,
-    quantity: f32,
-    total_price: f32,
-    total_with_vat: f32,
+    pub name: String,
+    pub price: f32,
+    pub vat_rate: f32,
+    pub single_vat_amount: f32,
+    pub price_with_vat: f32,
+    pub vat_amount: f32,
+    pub quantity: f32,
+    pub total_price: f32,
+    pub total_with_vat: f32,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct TransactionEvent {
-    id: u32,
-    event_type: String,
-    status: String,
-    amount: f32,
-    due_date: String,
-    date: String,
-    installment_number: u32,
-    timestamp: String,
+    pub id: u32,
+    pub event_type: String,
+    pub status: String,
+    pub amount: f32,
+    pub due_date: String,
+    pub date: String,
+    pub installment_number: u32,
+    pub timestamp: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Link {
-    rel: String,
-    href: String,
+    pub rel: String,
+    pub href: String,
     #[serde(rename = "type")]
-    ty: String,
-    min_amount: Option<f32>,
-    max_amount: Option<f32>,
+    pub ty: String,
+    pub min_amount: Option<f32>,
+    pub max_amount: Option<f32>,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Event {
-    id: u32,
-    transaction_id: String,
+    pub id: u32,
+    pub transaction_id: String,
     #[serde(rename = "type")]
-    ty: String,
-    status: String,
-    amount: f32,
-    timestamp: String,
-    fee_amount: f32,
-    installment_number: u32,
-    deducted_amount: f32,
-    deducted_fee_amount: f32,
+    pub ty: String,
+    pub status: String,
+    pub amount: f32,
+    pub timestamp: String,
+    pub fee_amount: f32,
+    pub installment_number: u32,
+    pub deducted_amount: f32,
+    pub deducted_fee_amount: f32,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Location {
-    lat: f32,
-    long: f32,
-    horizontal_accuracy: f32,
+    pub lat: f32,
+    pub long: f32,
+    pub horizontal_accuracy: f32,
 }
 
 #[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "UPPERCASE")]
-enum Status {
+pub enum Status {
     Successful,
     Cancelled,
     Failed,
@@ -350,7 +349,7 @@ impl ToString for Status {
 
 #[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "UPPERCASE")]
-enum PaymentType {
+pub enum PaymentType {
     Cash,
     Pos,
     Ecom,
@@ -376,7 +375,7 @@ impl ToString for PaymentType {
 }
 
 #[derive(Clone, Copy, Debug)]
-enum Type {
+pub enum Type {
     Payment,
     Refund,
     ChargeBack,
@@ -396,34 +395,34 @@ impl ToString for Type {
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Receipt {
-    transaction_data: Transaction,
+    pub transaction_data: Transaction,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct PaymentMethod {
-    id: String,
+    pub id: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct SubAccount {
-    account_type: String,
-    created_at: String,
-    disabled: bool,
-    id: String,
-    permissions: Permissions,
-    updated_at: String,
-    username: String,
+    pub account_type: String,
+    pub created_at: String,
+    pub disabled: bool,
+    pub id: String,
+    pub permissions: Permissions,
+    pub updated_at: String,
+    pub username: String,
 }
 
 #[derive(Clone, Debug, Default, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Permissions {
-    create_moto_payments: bool,
-    create_referral: bool,
-    full_transaction_history_view: bool,
-    refund_transactions: bool,
+    pub create_moto_payments: bool,
+    pub create_referral: bool,
+    pub full_transaction_history_view: bool,
+    pub refund_transactions: bool,
 }
 
 pub struct SumUp {
