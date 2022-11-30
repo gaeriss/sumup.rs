@@ -37,7 +37,7 @@ pub enum Response {
 pub struct Message {
     message: String,
     instance: Option<String>,
-    error_code: String,
+    error_code: Option<String>,
     param: Option<String>,
     #[serde(rename = "type")]
     ty: Option<String>,

@@ -306,6 +306,54 @@ impl Api {
         .map_err(crate::Error::from)
     }
 
+    pub fn subaccounts_create(
+        &self,
+        payload: impl serde::Serialize,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::SubAccount> {
+        ureq::post(url!("/v0.1/me/accounts"))
+            .set("Authorization", &access_token.bearer())
+            .send_json(payload)?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn subaccounts_delete(
+        &self,
+        id: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::SubAccount> {
+        ureq::delete(url!("/v0.1/me/accounts", id))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn subaccounts_list(
+        &self,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::SubAccount>> {
+        ureq::get(url!("/v0.1/me/accounts"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
+    pub fn subaccounts_update(
+        &self,
+        id: &str,
+        payload: impl serde::Serialize,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::SubAccount> {
+        ureq::put(url!("/v0.1/me/accounts", id))
+            .set("Authorization", &access_token.bearer())
+            .send_json(payload)?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
     pub fn transactions_list(
         &self,
         filter: &crate::services::payouts::Filter,

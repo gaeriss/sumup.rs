@@ -405,6 +405,27 @@ pub struct PaymentMethod {
     id: String,
 }
 
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SubAccount {
+    account_type: String,
+    created_at: String,
+    disabled: bool,
+    id: String,
+    permissions: Permissions,
+    updated_at: String,
+    username: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Permissions {
+    create_moto_payments: bool,
+    create_referral: bool,
+    full_transaction_history_view: bool,
+    refund_transactions: bool,
+}
+
 pub struct SumUp {
     access_token: AccessToken,
     api: Api,
@@ -488,6 +509,13 @@ impl SumUp {
      */
     pub fn personal(&self) -> crate::services::Personal {
         services::Personal::new(&self.api, &self.access_token)
+    }
+
+    /**
+     * <https://developer.sumup.com/docs/api/subaccounts/>
+     */
+    pub fn subaccounts(&self) -> crate::services::Subaccounts {
+        services::Subaccounts::new(&self.api, &self.access_token)
     }
 
     /**
