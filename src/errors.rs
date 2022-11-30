@@ -28,7 +28,7 @@ impl From<ureq::Error> for Error {
 #[derive(Debug, serde::Deserialize)]
 #[serde(untagged)]
 pub enum Response {
-    Message(Message),
+    Message(Box<Message>),
     Messages(Vec<Message>),
 }
 
