@@ -12,8 +12,8 @@ impl<'a> Checkout<'a> {
     /**
      * <https://developer.sumup.com/docs/api/get-available-payment-methods/>
      */
-    pub fn payment_methods(&self) -> crate::Result<crate::PaymentMethod> {
-        todo!()
+    pub fn payment_methods(&self, merchant_code: &str, amount: Option<f32>, currency: Option<&str>) -> crate::Result<Vec<crate::PaymentMethod>> {
+        self.api.merchants_payment_methods(merchant_code, amount, currency, self.access_token)
     }
 
     /**
@@ -72,6 +72,20 @@ impl<'a> Checkout<'a> {
 
 #[cfg(test)]
 mod test {
+    #[test]
+    fn payment_methods() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let profile = api.merchant().profile()?;
+
+        let payment_methods = api.checkout().payment_methods(&profile.merchant_code, None, None)?;
+        if payment_methods.is_empty() {
+            log::warn!("Empty response");
+        }
+
+        Ok(())
+    }
+
     #[test]
     fn create() -> crate::Result {
         let api = crate::test::api()?;

@@ -399,6 +399,12 @@ pub struct Receipt {
     transaction_data: Transaction,
 }
 
+#[derive(Clone, Debug, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PaymentMethod {
+    id: String,
+}
+
 pub struct SumUp {
     access_token: AccessToken,
     api: Api,

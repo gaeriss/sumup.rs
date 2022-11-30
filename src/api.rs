@@ -190,6 +190,30 @@ impl Api {
         .map_err(crate::Error::from)
     }
 
+    pub fn merchants_payment_methods(
+        &self,
+        merchant_code: &str,
+        amount: Option<f32>,
+        currency: Option<&str>,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::PaymentMethod>> {
+        let mut url = url!("/v0.1/merchants", merchant_code, "payment-methods?").to_string();
+
+        if let Some(amount) = amount {
+            url.push_str(&format!("amount={amount}&"));
+        }
+
+        if let Some(currency) = currency {
+            url.push_str(&format!("currency={currency}"));
+        }
+
+        ureq::get(&url)
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
     pub fn personal_get(
         &self,
         access_token: &crate::AccessToken,
