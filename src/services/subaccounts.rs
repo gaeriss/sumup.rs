@@ -31,7 +31,12 @@ impl<'a> Subaccounts<'a> {
     /**
      * <https://developer.sumup.com/docs/api/update-a-subaccount/>
      */
-    pub fn update(&self, id: &str, new_username: Option<&str>, new_password: Option<&str>) -> crate::Result<crate::SubAccount> {
+    pub fn update(
+        &self,
+        id: &str,
+        new_username: Option<&str>,
+        new_password: Option<&str>,
+    ) -> crate::Result<crate::SubAccount> {
         let mut payload = ureq::json!({});
 
         if let Some(new_username) = new_username {
@@ -67,7 +72,12 @@ mod test {
         if accounts.is_empty() {
             log::warn!("Empty response");
         } else {
-            assert_eq!(subaccounts.update(&accounts[0].id, Some("sb_new@example.org"), None)?.username, "sb_new@example.org");
+            assert_eq!(
+                subaccounts
+                    .update(&accounts[0].id, Some("sb_new@example.org"), None)?
+                    .username,
+                "sb_new@example.org"
+            );
             assert!(subaccounts.delete(&accounts[0].id)?.disabled);
         }
 
