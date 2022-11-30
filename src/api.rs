@@ -178,6 +178,17 @@ impl Api {
         .map_err(crate::Error::from)
     }
 
+    pub fn personal_get(
+        &self,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<crate::PersonalProfile> {
+        ureq::get(url!("/v0.1/me/personal-profile"))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
     pub fn profile_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Profile> {
         ureq::get(url!("/v0.1/me/merchant-profile"))
             .set("Authorization", &access_token.bearer())

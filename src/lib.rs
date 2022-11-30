@@ -478,6 +478,13 @@ impl SumUp {
     }
 
     /**
+     * <https://developer.sumup.com/docs/api/personal-account/>
+     */
+    pub fn personal(&self) -> crate::services::Personal {
+        services::Personal::new(&self.api, &self.access_token)
+    }
+
+    /**
      * <https://developer.sumup.com/docs/api/transactions/>
      */
     pub fn transactions(&self) -> crate::services::Transactions {
