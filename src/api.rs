@@ -45,6 +45,18 @@ impl Api {
             .map_err(crate::Error::from)
     }
 
+    pub fn checkout_list(
+        &self,
+        checkout_reference: &str,
+        access_token: &crate::AccessToken,
+    ) -> crate::Result<Vec<crate::Checkout>> {
+        ureq::get(&format!("{}?checkout_reference={checkout_reference}", url!("/v0.1/checkouts")))
+            .set("Authorization", &access_token.bearer())
+            .call()?
+            .into_json()
+            .map_err(crate::Error::from)
+    }
+
     pub fn checkout_get(
         &self,
         id: &str,

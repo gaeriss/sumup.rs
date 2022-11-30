@@ -26,8 +26,8 @@ impl<'a> Checkout<'a> {
     /**
      * <https://developer.sumup.com/docs/api/list-checkouts/>
      */
-    pub fn list(&self) -> crate::Result<Vec<crate::Checkout>> {
-        todo!()
+    pub fn list(&self, checkout_reference: &str) -> crate::Result<Vec<crate::Checkout>> {
+        self.api.checkout_list(checkout_reference, self.access_token)
     }
 
     /**
@@ -88,6 +88,18 @@ mod test {
         };
 
         api.checkout().create(&checkout)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn list() -> crate::Result {
+        let api = crate::test::api()?;
+
+        let checkouts = api.checkout().list("1")?;
+        if checkouts.is_empty() {
+            log::warn!("Empty response");
+        }
 
         Ok(())
     }
