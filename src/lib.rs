@@ -12,6 +12,7 @@ pub use errors::*;
 use api::Api;
 use config::Config;
 
+#[derive(Clone, Debug)]
 pub struct SumUp {
     access_token: AccessToken,
     api: Api,
