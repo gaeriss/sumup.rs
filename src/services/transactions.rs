@@ -63,20 +63,20 @@ impl<'a> Transactions<'a> {
 
 #[derive(Clone, Debug, Default)]
 pub struct Filter {
-    start_date: String,
-    end_date: String,
-    order: Option<String>,
-    limit: Option<u32>,
-    user_id: Option<u32>,
-    users: Vec<u32>,
-    statuses: Vec<crate::Status>,
-    payment_types: Vec<crate::PaymentType>,
-    types: Vec<crate::Type>,
-    changes_since: Option<String>,
-    newest_time: Option<String>,
-    newest_ref: Option<String>,
-    oldest_time: Option<String>,
-    oldest_ref: Option<String>,
+    pub start_date: String,
+    pub end_date: String,
+    pub order: Option<String>,
+    pub limit: Option<u32>,
+    pub user_id: Option<u32>,
+    pub users: Vec<u32>,
+    pub statuses: Vec<crate::Status>,
+    pub payment_types: Vec<crate::PaymentType>,
+    pub types: Vec<crate::Type>,
+    pub changes_since: Option<String>,
+    pub newest_time: Option<String>,
+    pub newest_ref: Option<String>,
+    pub oldest_time: Option<String>,
+    pub oldest_ref: Option<String>,
 }
 
 impl ToString for Filter {

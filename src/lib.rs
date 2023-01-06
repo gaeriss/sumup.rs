@@ -1,16 +1,16 @@
 #[warn(warnings)]
+pub mod config;
 pub mod errors;
+pub mod services;
 
 mod api;
-mod config;
 mod entity;
-mod services;
 
+pub use config::Config;
 pub use entity::*;
 pub use errors::*;
 
 use api::Api;
-use config::Config;
 
 #[derive(Clone, Debug)]
 pub struct SumUp {
