@@ -35,6 +35,7 @@ pub enum Response {
 #[derive(Debug, serde::Deserialize)]
 #[cfg_attr(test, serde(deny_unknown_fields))]
 pub struct Message {
+    #[serde(alias = "error_message")]
     pub message: String,
     pub instance: Option<String>,
     pub error_code: Option<String>,
