@@ -40,6 +40,10 @@ impl SumUp {
         Ok(sumup)
     }
 
+    pub fn access_token(&self) -> &AccessToken {
+        &self.access_token
+    }
+
     /**
      * <https://developer.sumup.com/docs/api/generate-a-token/>
      */
