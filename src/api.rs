@@ -1,3 +1,11 @@
+#[derive(Clone, Copy, Debug)]
+enum Method {
+    Delete,
+    Get,
+    Post,
+    Put,
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct Api {}
 
@@ -19,18 +27,16 @@ impl Api {
     }
 
     pub fn token(&self, payload: impl serde::Serialize) -> crate::Result<crate::AccessToken> {
-        ureq::post(url!("/token"))
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(Method::Post, url!("/token"), Some(payload), None)
     }
 
     pub fn account_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Account> {
-        ureq::get(url!("/v0.1/me"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn checkout_create(
@@ -38,11 +44,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        ureq::post(url!("/checkouts"))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Post,
+            url!("/checkouts"),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn checkout_list(
@@ -50,14 +57,15 @@ impl Api {
         checkout_reference: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Checkout>> {
-        ureq::get(&format!(
-            "{}?checkout_reference={checkout_reference}",
-            url!("/v0.1/checkouts")
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!(
+                "{}?checkout_reference={checkout_reference}",
+                url!("/v0.1/checkouts")
+            ),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn checkout_get(
@@ -65,11 +73,12 @@ impl Api {
         id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Checkout> {
-        ureq::get(url!("/checkouts", id))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/checkouts", id),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn checkout_reference_id(
@@ -77,25 +86,21 @@ impl Api {
         reference_id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Checkout> {
-        ureq::get(&format!(
-            "{}?checkout_reference={}",
-            url!("/checkouts"),
-            reference_id
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!("{}?checkout_reference={}", url!("/checkouts"), reference_id),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn checkout_delete(&self, id: &str, access_token: &crate::AccessToken) -> crate::Result {
-        ureq::delete(url!("/checkouts", id))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)?;
-
-        Ok(())
+        Self::send(
+            Method::Delete,
+            url!("/checkouts", id),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn checkout_update(
@@ -104,13 +109,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        ureq::put(url!("/checkouts", id))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)?;
-
-        Ok(())
+        Self::send(
+            Method::Put,
+            url!("/checkouts", id),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn customer_create(
@@ -118,11 +122,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        ureq::post(url!("/v0.1/customers"))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)
-            .map(|_| ())
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Post,
+            url!("/v0.1/customers"),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn customer_update(
@@ -131,11 +136,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Customer> {
-        ureq::put(url!("/v0.1/customers", id))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Put,
+            url!("/v0.1/customers", id),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn customer_get(
@@ -143,11 +149,12 @@ impl Api {
         id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Customer> {
-        ureq::get(url!("/v0.1/customers", id))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/customers", id),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn customer_payment_instruments(
@@ -155,11 +162,12 @@ impl Api {
         customer_id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Card>> {
-        ureq::get(url!("/v0.1/customers", customer_id, "payment-instruments"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/customers", customer_id, "payment-instruments"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn customer_create_payment_instruments(
@@ -168,11 +176,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Card> {
-        ureq::post(url!("/v0.1/customers", customer_id, "payment-instruments"))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Post,
+            url!("/v0.1/customers", customer_id, "payment-instruments"),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn customer_delete_payment_instruments(
@@ -181,16 +190,12 @@ impl Api {
         card_token: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        ureq::delete(url!(
-            "/customers",
-            customer_id,
-            "payment-instruments",
-            card_token
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Delete,
+            url!("/customers", customer_id, "payment-instruments", card_token),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn merchants_payment_methods(
@@ -210,30 +215,28 @@ impl Api {
             url.push_str(&format!("currency={currency}"));
         }
 
-        ureq::get(&url)
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(Method::Get, &url, None::<()>, Some(access_token))
     }
 
     pub fn personal_get(
         &self,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::PersonalProfile> {
-        ureq::get(url!("/v0.1/me/personal-profile"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/personal-profile"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn profile_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Profile> {
-        ureq::get(url!("/v0.1/me/merchant-profile"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/merchant-profile"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn profile_update(
@@ -241,22 +244,24 @@ impl Api {
         profile: &crate::Profile,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        ureq::put(url!("/v0.1/me/merchant-profile"))
-            .set("Authorization", &access_token.bearer())
-            .send_json(profile)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Put,
+            url!("/v0.1/me/merchant-profile"),
+            Some(profile),
+            Some(access_token),
+        )
     }
 
     pub fn profile_doing_business_as_get(
         &self,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::DoingBusinessAs> {
-        ureq::get(url!("/v0.1/me/merchant-profile/doing-business-as"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/merchant-profile/doing-business-as"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn profile_doing_business_as_update(
@@ -264,33 +269,36 @@ impl Api {
         dba: &crate::DoingBusinessAs,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::DoingBusinessAs> {
-        ureq::put(url!("/v0.1/me/merchant-profile/doing-business-as"))
-            .set("Authorization", &access_token.bearer())
-            .send_json(dba)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Put,
+            url!("/v0.1/me/merchant-profile/doing-business-as"),
+            Some(dba),
+            Some(access_token),
+        )
     }
 
     pub fn profile_bank_accounts(
         &self,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::BankAccount>> {
-        ureq::get(url!("/v0.1/me/merchant-profile/bank-accounts"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/merchant-profile/bank-accounts"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn profile_settings(
         &self,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Settings> {
-        ureq::get(url!("/v0.1/me/merchant-profile/settings"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/merchant-profile/settings"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn payouts_list(
@@ -298,15 +306,16 @@ impl Api {
         filter: &crate::services::payouts::Filter,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Payout>> {
-        ureq::get(&format!(
-            "{}?{}",
-            url!("/v0.1/me/financials/payouts"),
-            filter.to_string()
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!(
+                "{}?{}",
+                url!("/v0.1/me/financials/payouts"),
+                filter.to_string()
+            ),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn subaccounts_create(
@@ -314,11 +323,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::SubAccount> {
-        ureq::post(url!("/v0.1/me/accounts"))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Post,
+            url!("/v0.1/me/accounts"),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn subaccounts_delete(
@@ -326,22 +336,24 @@ impl Api {
         id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::SubAccount> {
-        ureq::delete(url!("/v0.1/me/accounts", id))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Delete,
+            url!("/v0.1/me/accounts", id),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn subaccounts_list(
         &self,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::SubAccount>> {
-        ureq::get(url!("/v0.1/me/accounts"))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/accounts"),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn subaccounts_update(
@@ -350,11 +362,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::SubAccount> {
-        ureq::put(url!("/v0.1/me/accounts", id))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Put,
+            url!("/v0.1/me/accounts", id),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn transactions_list(
@@ -362,15 +375,16 @@ impl Api {
         filter: &crate::services::payouts::Filter,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Transaction>> {
-        ureq::get(&format!(
-            "{}?{}",
-            url!("/v0.1/me/financials/transactions"),
-            filter.to_string()
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!(
+                "{}?{}",
+                url!("/v0.1/me/financials/transactions"),
+                filter.to_string()
+            ),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn transactions_get(
@@ -378,11 +392,12 @@ impl Api {
         id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Transaction> {
-        ureq::get(&format!("{}?id={id}", url!("/v0.1/me/transactions")))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!("{}?id={id}", url!("/v0.1/me/transactions")),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn transactions_get_by_internal_id(
@@ -390,14 +405,15 @@ impl Api {
         internal_id: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Transaction> {
-        ureq::get(&format!(
-            "{}?internal_id={internal_id}",
-            url!("/v0.1/me/transactions")
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!(
+                "{}?internal_id={internal_id}",
+                url!("/v0.1/me/transactions")
+            ),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn transactions_get_by_code(
@@ -405,14 +421,15 @@ impl Api {
         transaction_code: &str,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Transaction> {
-        ureq::get(&format!(
-            "{}?transaction_code={transaction_code}",
-            url!("/v0.1/me/transactions")
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!(
+                "{}?transaction_code={transaction_code}",
+                url!("/v0.1/me/transactions")
+            ),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn transactions_history(
@@ -420,15 +437,16 @@ impl Api {
         filter: &crate::services::transactions::Filter,
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Transaction>> {
-        ureq::get(&format!(
-            "{}?{}",
-            url!("/v0.1/me/financials/payouts"),
-            filter.to_string()
-        ))
-        .set("Authorization", &access_token.bearer())
-        .call()?
-        .into_json()
-        .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!(
+                "{}?{}",
+                url!("/v0.1/me/financials/payouts"),
+                filter.to_string()
+            ),
+            None::<()>,
+            Some(access_token),
+        )
     }
 
     pub fn transactions_refund(
@@ -437,11 +455,12 @@ impl Api {
         payload: impl serde::Serialize,
         access_token: &crate::AccessToken,
     ) -> crate::Result {
-        ureq::get(url!("/v0.1/me/refund", id))
-            .set("Authorization", &access_token.bearer())
-            .send_json(payload)?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            url!("/v0.1/me/refund", id),
+            Some(payload),
+            Some(access_token),
+        )
     }
 
     pub fn transactions_get_receipt(
@@ -450,10 +469,48 @@ impl Api {
         merchant_id: u32,
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Receipt> {
-        ureq::get(&format!("{}?mid={merchant_id}", url!("/receipts", id)))
-            .set("Authorization", &access_token.bearer())
-            .call()?
-            .into_json()
-            .map_err(crate::Error::from)
+        Self::send(
+            Method::Get,
+            &format!("{}?mid={merchant_id}", url!("/receipts", id)),
+            None::<()>,
+            Some(access_token),
+        )
+    }
+
+    fn send<T: serde::de::DeserializeOwned>(
+        method: Method,
+        url: &str,
+        payload: Option<impl serde::Serialize>,
+        access_token: Option<&crate::AccessToken>,
+    ) -> crate::Result<T> {
+        log::trace!("-> {method:?} {url}");
+
+        let mut request = match method {
+            Method::Get => ureq::get(url),
+            Method::Post => ureq::post(url),
+            Method::Delete => ureq::delete(url),
+            Method::Put => ureq::delete(url),
+        };
+
+        if let Some(access_token) = access_token {
+            let bearer = access_token.bearer();
+            log::trace!("-> Authorization: {bearer}");
+            request = request.set("Authorization", &bearer);
+        }
+
+        let response = match payload {
+            Some(payload) => {
+                if log::log_enabled!(log::Level::Trace) {
+                    log::trace!("-> {}", serde_json::to_string(&payload)?);
+                }
+                request.send_json(payload)?
+            }
+            None => request.call()?,
+        };
+
+        let content = response.into_string()?;
+        log::trace!("<- {content}");
+
+        serde_json::from_str(&content).map_err(crate::Error::from)
     }
 }
