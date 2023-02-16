@@ -64,15 +64,11 @@ impl<'a> Authorization<'a> {
     }
 
     fn token_password(&self) -> crate::Result<crate::AccessToken> {
-        let username = match &self.config.username {
-            Some(username) => username,
-            None => return Err(crate::Error::Auth("Missing username configuration")),
-        };
+        let username = self.config.username.as_ref()
+            .ok_or(crate::Error::Auth("Missing username configuration"))?;
 
-        let password = match &self.config.password {
-            Some(password) => password,
-            None => return Err(crate::Error::Auth("Missing password configuration")),
-        };
+        let password = self.config.password.as_ref()
+            .ok_or(crate::Error::Auth("Missing password configuration"))?;
 
         let payload = ureq::json!({
             "grant_type": "password",
