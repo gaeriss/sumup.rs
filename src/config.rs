@@ -172,7 +172,7 @@ impl<'de> serde::de::Visitor<'de> for Visitor {
 
         value
             .split(' ')
-            .map(|x| x.parse())
+            .map(str::parse)
             .collect::<crate::Result<Vec<_>>>()
             .map_err(serde::de::Error::custom)
     }
