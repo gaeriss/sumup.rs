@@ -20,8 +20,7 @@ impl From<ureq::Error> for Error {
             .into_response()
             .unwrap()
             .into_json()
-            .map(Self::Api)
-            .unwrap_or_else(Self::from)
+            .map_or_else(Self::from, Self::Api)
     }
 }
 
