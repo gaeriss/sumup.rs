@@ -34,6 +34,7 @@ pub struct Config {
 }
 
 impl Config {
+    #[must_use]
     pub fn new(client_id: &str, client_secret: &str, code: &str) -> Self {
         Self {
             client_id: client_id.to_string(),

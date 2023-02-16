@@ -5,6 +5,7 @@ pub struct Payouts<'a> {
 }
 
 impl<'a> Payouts<'a> {
+    #[must_use]
     pub fn new(api: &'a crate::Api, access_token: &'a crate::AccessToken) -> Self {
         Self { api, access_token }
     }

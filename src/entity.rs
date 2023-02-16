@@ -10,6 +10,7 @@ pub struct AccessToken {
 }
 
 impl AccessToken {
+    #[must_use]
     pub fn bearer(&self) -> String {
         format!("Bearer {}", self.access_token)
     }

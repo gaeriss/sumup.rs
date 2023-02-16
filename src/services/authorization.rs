@@ -5,6 +5,7 @@ pub struct Authorization<'a> {
 }
 
 impl<'a> Authorization<'a> {
+    #[must_use]
     pub fn new(api: &'a crate::Api, config: &'a crate::Config) -> Self {
         Self { api, config }
     }
