@@ -489,7 +489,7 @@ impl Api {
             Method::Get => ureq::get(url),
             Method::Post => ureq::post(url),
             Method::Delete => ureq::delete(url),
-            Method::Put => ureq::delete(url),
+            Method::Put => ureq::put(url),
         };
 
         if let Some(access_token) = access_token {
