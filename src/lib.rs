@@ -133,7 +133,7 @@ mod test {
 
     pub(crate) fn api() -> crate::Result<crate::SumUp> {
         INIT.call_once(|| {
-            dotenv::dotenv().ok();
+            dotenvy::dotenv().ok();
             env_logger::init();
         });
 
