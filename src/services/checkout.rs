@@ -74,7 +74,7 @@ impl<'a> Checkout<'a> {
             "installments": installments.unwrap_or(1),
         });
 
-        self.api.checkout_update(id, &payload, self.access_token)
+        self.api.checkout_update(id, payload, self.access_token)
     }
 }
 

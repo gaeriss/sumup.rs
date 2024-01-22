@@ -53,7 +53,7 @@ impl<'a> Customer<'a> {
             "card": card,
         });
         self.api
-            .customer_create_payment_instruments(customer_id, &payload, self.access_token)
+            .customer_create_payment_instruments(customer_id, payload, self.access_token)
     }
 
     /**

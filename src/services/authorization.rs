@@ -49,7 +49,7 @@ impl<'a> Authorization<'a> {
             "code": self.config.code,
         });
 
-        self.api.token(&payload)
+        self.api.token(payload)
     }
 
     fn token_by_client_credentials(&self) -> crate::Result<crate::AccessToken> {
@@ -60,7 +60,7 @@ impl<'a> Authorization<'a> {
             "scope": self.config.scopes,
         });
 
-        self.api.token(&payload)
+        self.api.token(payload)
     }
 
     fn token_password(&self) -> crate::Result<crate::AccessToken> {
@@ -85,7 +85,7 @@ impl<'a> Authorization<'a> {
             "password": password,
         });
 
-        self.api.token(&payload)
+        self.api.token(payload)
     }
 
     pub(crate) fn refresh_token(&self, refresh_token: &str) -> crate::Result<crate::AccessToken> {
@@ -97,6 +97,6 @@ impl<'a> Authorization<'a> {
             "refresh_token": refresh_token,
         });
 
-        self.api.token(&payload)
+        self.api.token(payload)
     }
 }

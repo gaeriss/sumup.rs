@@ -19,7 +19,7 @@ impl<'a> Subaccounts<'a> {
             "password": password,
         });
 
-        self.api.subaccounts_create(&payload, self.access_token)
+        self.api.subaccounts_create(payload, self.access_token)
     }
 
     /**
