@@ -20,5 +20,5 @@ features = ["json"]
 
 [dev-dependencies]
 dotenvy = "0.15"
-env_logger = "0.10"
+env_logger = "0.11"
 log = "0.4"
