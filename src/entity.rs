@@ -323,16 +323,17 @@ pub enum Status {
     ChargeBack,
 }
 
-impl ToString for Status {
-    fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for Status {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             Status::Successful => "SUCCESSFUL",
             Status::Cancelled => "CANCELLED",
             Status::Failed => "FAILED",
             Status::Refunded => "REFUNDED",
             Status::ChargeBack => "CHARGE_BACK",
-        }
-        .to_string()
+        };
+
+        f.write_str(s)
     }
 }
 
@@ -348,9 +349,9 @@ pub enum PaymentType {
     Unknown,
 }
 
-impl ToString for PaymentType {
-    fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for PaymentType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             PaymentType::Cash => "CASH",
             PaymentType::Pos => "POS",
             PaymentType::Ecom => "ECOM",
@@ -358,8 +359,9 @@ impl ToString for PaymentType {
             PaymentType::Moto => "MOTO",
             PaymentType::Boleto => "BOLETO",
             PaymentType::Unknown => "UNKNOWN",
-        }
-        .to_string()
+        };
+
+        f.write_str(s)
     }
 }
 
@@ -370,14 +372,15 @@ pub enum Type {
     ChargeBack,
 }
 
-impl ToString for Type {
-    fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             Type::Payment => "PAYMENT",
             Type::Refund => "REFUND",
             Type::ChargeBack => "CHARGE_BACK",
-        }
-        .to_string()
+        };
+
+        f.write_str(s)
     }
 }
 

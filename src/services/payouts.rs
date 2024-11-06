@@ -27,6 +27,7 @@ pub struct Filter {
     descending_order: bool,
 }
 
+#[allow(clippy::to_string_trait_impl)]
 impl ToString for Filter {
     fn to_string(&self) -> String {
         let order = if self.descending_order { "desc" } else { "asc" };

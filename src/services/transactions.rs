@@ -80,6 +80,7 @@ pub struct Filter {
     pub oldest_ref: Option<String>,
 }
 
+#[allow(clippy::to_string_trait_impl)]
 impl ToString for Filter {
     fn to_string(&self) -> String {
         let mut v = Vec::new();
@@ -101,15 +102,15 @@ impl ToString for Filter {
         }
 
         for statuse in &self.statuses {
-            v.push(format!("statuse={}", statuse.to_string()));
+            v.push(format!("statuse={statuse}"));
         }
 
         for payment_type in &self.payment_types {
-            v.push(format!("payment_type={}", payment_type.to_string()));
+            v.push(format!("payment_type={payment_type}"));
         }
 
         for ty in &self.types {
-            v.push(format!("type={}", ty.to_string()));
+            v.push(format!("type={ty}"));
         }
 
         if let Some(changes_since) = &self.changes_since {
