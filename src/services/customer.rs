@@ -48,7 +48,7 @@ impl<'a> Customer<'a> {
         customer_id: &str,
         card: &crate::Card,
     ) -> crate::Result<crate::Card> {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "type": "card",
             "card": card,
         });

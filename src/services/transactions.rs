@@ -37,7 +37,7 @@ impl<'a> Transactions<'a> {
      * <https://developer.sumup.com/docs/api/refund-a-transaction/>
      */
     pub fn full_refund(&self, id: u32) -> crate::Result {
-        let payload = ureq::json!({});
+        let payload = serde_json::json!({});
 
         self.api.transactions_refund(id, payload, self.access_token)
     }
@@ -46,7 +46,7 @@ impl<'a> Transactions<'a> {
      * <https://developer.sumup.com/docs/api/refund-a-transaction/>
      */
     pub fn refund(&self, id: u32, amount: f32) -> crate::Result {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "amount": amount,
         });
 

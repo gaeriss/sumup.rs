@@ -67,7 +67,7 @@ impl<'a> Checkout<'a> {
         card_token: &str,
         installments: Option<u8>,
     ) -> crate::Result {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "payment_type": "card",
             "customer_id": customer_id,
             "token": card_token,

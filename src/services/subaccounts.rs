@@ -14,7 +14,7 @@ impl<'a> Subaccounts<'a> {
      * <https://developer.sumup.com/docs/api/create-a-subaccount/>
      */
     pub fn create(&self, email: &str, password: &str) -> crate::Result<crate::SubAccount> {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "username": email,
             "password": password,
         });
@@ -38,14 +38,14 @@ impl<'a> Subaccounts<'a> {
         new_username: Option<&str>,
         new_password: Option<&str>,
     ) -> crate::Result<crate::SubAccount> {
-        let mut payload = ureq::json!({});
+        let mut payload = serde_json::json!({});
 
         if let Some(new_username) = new_username {
-            payload["username"] = ureq::json!(new_username);
+            payload["username"] = serde_json::json!(new_username);
         }
 
         if let Some(new_password) = new_password {
-            payload["password"] = ureq::json!(new_password);
+            payload["password"] = serde_json::json!(new_password);
         }
 
         self.api.subaccounts_update(id, &payload, self.access_token)

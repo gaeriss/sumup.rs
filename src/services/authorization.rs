@@ -42,7 +42,7 @@ impl<'a> Authorization<'a> {
     }
 
     fn token_by_code(&self) -> crate::Result<crate::AccessToken> {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "grant_type": "authorization_code",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
@@ -53,7 +53,7 @@ impl<'a> Authorization<'a> {
     }
 
     fn token_by_client_credentials(&self) -> crate::Result<crate::AccessToken> {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "grant_type": "client_credentials",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
@@ -76,7 +76,7 @@ impl<'a> Authorization<'a> {
             .as_ref()
             .ok_or(crate::Error::Auth("Missing password configuration"))?;
 
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "grant_type": "password",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
@@ -89,7 +89,7 @@ impl<'a> Authorization<'a> {
     }
 
     pub(crate) fn refresh_token(&self, refresh_token: &str) -> crate::Result<crate::AccessToken> {
-        let payload = ureq::json!({
+        let payload = serde_json::json!({
             "grant_type": "refresh_token",
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
