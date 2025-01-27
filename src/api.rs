@@ -1,11 +1,3 @@
-#[derive(Clone, Copy, Debug)]
-enum Method {
-    Delete,
-    Get,
-    Post,
-    Put,
-}
-
 #[derive(Clone, Debug, Default)]
 pub struct Api {}
 
@@ -27,12 +19,12 @@ impl Api {
     }
 
     pub fn token(&self, payload: impl serde::Serialize) -> crate::Result<crate::AccessToken> {
-        Self::send(Method::Post, url!("/token"), Some(payload), None)
+        Self::send(reqwest::Method::POST, url!("/token"), Some(payload), None)
     }
 
     pub fn account_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Account> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me"),
             None::<()>,
             Some(access_token),
@@ -45,7 +37,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result {
         Self::send(
-            Method::Post,
+            reqwest::Method::POST,
             url!("/checkouts"),
             Some(payload),
             Some(access_token),
@@ -58,7 +50,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Checkout>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!(
                 "{}?checkout_reference={checkout_reference}",
                 url!("/v0.1/checkouts")
@@ -74,7 +66,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Checkout> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/checkouts", id),
             None::<()>,
             Some(access_token),
@@ -87,7 +79,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Checkout> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!("{}?checkout_reference={}", url!("/checkouts"), reference_id),
             None::<()>,
             Some(access_token),
@@ -96,7 +88,7 @@ impl Api {
 
     pub fn checkout_delete(&self, id: &str, access_token: &crate::AccessToken) -> crate::Result {
         Self::send(
-            Method::Delete,
+            reqwest::Method::DELETE,
             url!("/checkouts", id),
             None::<()>,
             Some(access_token),
@@ -110,7 +102,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result {
         Self::send(
-            Method::Put,
+            reqwest::Method::PUT,
             url!("/checkouts", id),
             Some(payload),
             Some(access_token),
@@ -123,7 +115,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result {
         Self::send(
-            Method::Post,
+            reqwest::Method::POST,
             url!("/v0.1/customers"),
             Some(payload),
             Some(access_token),
@@ -137,7 +129,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Customer> {
         Self::send(
-            Method::Put,
+            reqwest::Method::PUT,
             url!("/v0.1/customers", id),
             Some(payload),
             Some(access_token),
@@ -150,7 +142,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Customer> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/customers", id),
             None::<()>,
             Some(access_token),
@@ -163,7 +155,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Card>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/customers", customer_id, "payment-instruments"),
             None::<()>,
             Some(access_token),
@@ -177,7 +169,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Card> {
         Self::send(
-            Method::Post,
+            reqwest::Method::POST,
             url!("/v0.1/customers", customer_id, "payment-instruments"),
             Some(payload),
             Some(access_token),
@@ -191,7 +183,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result {
         Self::send(
-            Method::Delete,
+            reqwest::Method::DELETE,
             url!("/customers", customer_id, "payment-instruments", card_token),
             None::<()>,
             Some(access_token),
@@ -215,7 +207,7 @@ impl Api {
             url.push_str(&format!("currency={currency}"));
         }
 
-        Self::send(Method::Get, &url, None::<()>, Some(access_token))
+        Self::send(reqwest::Method::GET, &url, None::<()>, Some(access_token))
     }
 
     pub fn personal_get(
@@ -223,7 +215,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::PersonalProfile> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/personal-profile"),
             None::<()>,
             Some(access_token),
@@ -232,7 +224,7 @@ impl Api {
 
     pub fn profile_get(&self, access_token: &crate::AccessToken) -> crate::Result<crate::Profile> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/merchant-profile"),
             None::<()>,
             Some(access_token),
@@ -245,7 +237,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result {
         Self::send(
-            Method::Put,
+            reqwest::Method::PUT,
             url!("/v0.1/me/merchant-profile"),
             Some(profile),
             Some(access_token),
@@ -257,7 +249,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::DoingBusinessAs> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/merchant-profile/doing-business-as"),
             None::<()>,
             Some(access_token),
@@ -270,7 +262,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::DoingBusinessAs> {
         Self::send(
-            Method::Put,
+            reqwest::Method::PUT,
             url!("/v0.1/me/merchant-profile/doing-business-as"),
             Some(dba),
             Some(access_token),
@@ -282,7 +274,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::BankAccount>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/merchant-profile/bank-accounts"),
             None::<()>,
             Some(access_token),
@@ -294,7 +286,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Settings> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/merchant-profile/settings"),
             None::<()>,
             Some(access_token),
@@ -307,7 +299,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Payout>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!(
                 "{}?{}",
                 url!("/v0.1/me/financials/payouts"),
@@ -324,7 +316,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::SubAccount> {
         Self::send(
-            Method::Post,
+            reqwest::Method::POST,
             url!("/v0.1/me/accounts"),
             Some(payload),
             Some(access_token),
@@ -337,7 +329,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::SubAccount> {
         Self::send(
-            Method::Delete,
+            reqwest::Method::DELETE,
             url!("/v0.1/me/accounts", id),
             None::<()>,
             Some(access_token),
@@ -349,7 +341,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::SubAccount>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/accounts"),
             None::<()>,
             Some(access_token),
@@ -363,7 +355,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::SubAccount> {
         Self::send(
-            Method::Put,
+            reqwest::Method::PUT,
             url!("/v0.1/me/accounts", id),
             Some(payload),
             Some(access_token),
@@ -376,7 +368,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Transaction>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!(
                 "{}?{}",
                 url!("/v0.1/me/financials/transactions"),
@@ -393,7 +385,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Transaction> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!("{}?id={id}", url!("/v0.1/me/transactions")),
             None::<()>,
             Some(access_token),
@@ -406,7 +398,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Transaction> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!(
                 "{}?internal_id={internal_id}",
                 url!("/v0.1/me/transactions")
@@ -422,7 +414,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Transaction> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!(
                 "{}?transaction_code={transaction_code}",
                 url!("/v0.1/me/transactions")
@@ -438,7 +430,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<Vec<crate::Transaction>> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!(
                 "{}?{}",
                 url!("/v0.1/me/financials/payouts"),
@@ -456,7 +448,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             url!("/v0.1/me/refund", id),
             Some(payload),
             Some(access_token),
@@ -470,7 +462,7 @@ impl Api {
         access_token: &crate::AccessToken,
     ) -> crate::Result<crate::Receipt> {
         Self::send(
-            Method::Get,
+            reqwest::Method::GET,
             &format!("{}?mid={merchant_id}", url!("/receipts", id)),
             None::<()>,
             Some(access_token),
@@ -478,39 +470,38 @@ impl Api {
     }
 
     fn send<T: serde::de::DeserializeOwned>(
-        method: Method,
+        method: reqwest::Method,
         url: &str,
         payload: Option<impl serde::Serialize>,
         access_token: Option<&crate::AccessToken>,
     ) -> crate::Result<T> {
         log::trace!("-> {method:?} {url}");
 
-        let mut request = match method {
-            Method::Get => ureq::get(url),
-            Method::Post => ureq::post(url),
-            Method::Delete => ureq::delete(url),
-            Method::Put => ureq::put(url),
-        };
+        let mut request = reqwest::blocking::Client::new().request(method, url);
 
         if let Some(access_token) = access_token {
             let bearer = access_token.bearer();
             log::trace!("-> Authorization: {bearer}");
-            request = request.set("Authorization", &bearer);
+            request = request.header(reqwest::header::AUTHORIZATION, &bearer);
         }
 
-        let response = match payload {
-            Some(payload) => {
-                if log::log_enabled!(log::Level::Trace) {
-                    log::trace!("-> {}", serde_json::to_string(&payload)?);
-                }
-                request.send_json(payload)?
+        if let Some(payload) = payload {
+            if log::log_enabled!(log::Level::Trace) {
+                log::trace!("-> {}", serde_json::to_string(&payload)?);
             }
-            None => request.call()?,
-        };
+            request = request.json(&payload);
+        }
 
-        let content = response.into_string()?;
+        let response = request.send()?;
+        let status = response.status();
+        let content = response.text()?;
         log::trace!("<- {content}");
 
-        serde_json::from_str(&content).map_err(crate::Error::from)
+        if status.is_success() {
+            serde_json::from_str(&content).map_err(crate::Error::from)
+        } else {
+            let message = serde_json::from_str(&content)?;
+            Err(crate::Error::Api(message))
+        }
     }
 }

@@ -6,22 +6,14 @@ pub enum Error {
     Api(Response),
     #[error("{0}")]
     Auth(&'static str),
+    #[error("{0:?}")]
+    Http(#[from] reqwest::Error),
     #[error("Invalid scope: {0}")]
     InvalidScope(String),
     #[error("{0}")]
     Io(#[from] std::io::Error),
     #[error("{0}")]
     Json(#[from] serde_json::Error),
-}
-
-impl From<ureq::Error> for Error {
-    fn from(error: ureq::Error) -> Self {
-        error
-            .into_response()
-            .unwrap()
-            .into_json()
-            .map_or_else(Self::from, Self::Api)
-    }
 }
 
 #[derive(Debug, serde::Deserialize)]
@@ -32,16 +24,24 @@ pub enum Response {
 }
 
 #[derive(Debug, serde::Deserialize)]
-#[cfg_attr(test, serde(deny_unknown_fields))]
-pub struct Message {
-    #[serde(alias = "error_message")]
-    pub message: String,
-    pub instance: Option<String>,
-    pub error_code: Option<String>,
-    pub param: Option<String>,
-    #[serde(rename = "type")]
-    pub ty: Option<String>,
-    pub title: Option<String>,
-    pub status: Option<u8>,
-    pub detail: Option<String>,
+#[serde(untagged)]
+pub enum Message {
+    Short {
+        #[serde(alias = "error")]
+        message: String,
+        #[serde(alias = "error_description")]
+        description: String,
+    },
+    Long {
+        #[serde(alias = "error_message")]
+        message: String,
+        instance: Option<String>,
+        error_code: Option<String>,
+        param: Option<String>,
+        #[serde(rename = "type")]
+        ty: Option<String>,
+        title: Option<String>,
+        status: Option<u8>,
+        detail: Option<String>,
+    },
 }
