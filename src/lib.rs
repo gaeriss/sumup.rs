@@ -61,7 +61,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/account-details/>
      */
     #[must_use]
-    pub fn account(&self) -> crate::services::Account {
+    pub fn account(&self) -> crate::services::Account<'_> {
         services::Account::new(&self.api, &self.access_token)
     }
 
@@ -69,7 +69,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/authorization/>
      */
     #[must_use]
-    pub fn authorization(&self) -> crate::services::Authorization {
+    pub fn authorization(&self) -> crate::services::Authorization<'_> {
         services::Authorization::new(&self.api, &self.config)
     }
 
@@ -77,7 +77,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/checkouts/>
      */
     #[must_use]
-    pub fn checkout(&self) -> crate::services::Checkout {
+    pub fn checkout(&self) -> crate::services::Checkout<'_> {
         services::Checkout::new(&self.api, &self.access_token)
     }
 
@@ -85,7 +85,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/customers/>
      */
     #[must_use]
-    pub fn customer(&self) -> crate::services::Customer {
+    pub fn customer(&self) -> crate::services::Customer<'_> {
         services::Customer::new(&self.api, &self.access_token)
     }
 
@@ -93,12 +93,12 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/merchant-account/>
      */
     #[must_use]
-    pub fn merchant(&self) -> crate::services::Merchant {
+    pub fn merchant(&self) -> crate::services::Merchant<'_> {
         services::Merchant::new(&self.api, &self.access_token)
     }
 
     #[must_use]
-    pub fn payouts(&self) -> crate::services::Payouts {
+    pub fn payouts(&self) -> crate::services::Payouts<'_> {
         services::Payouts::new(&self.api, &self.access_token)
     }
 
@@ -106,7 +106,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/personal-account/>
      */
     #[must_use]
-    pub fn personal(&self) -> crate::services::Personal {
+    pub fn personal(&self) -> crate::services::Personal<'_> {
         services::Personal::new(&self.api, &self.access_token)
     }
 
@@ -114,7 +114,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/subaccounts/>
      */
     #[must_use]
-    pub fn subaccounts(&self) -> crate::services::Subaccounts {
+    pub fn subaccounts(&self) -> crate::services::Subaccounts<'_> {
         services::Subaccounts::new(&self.api, &self.access_token)
     }
 
@@ -122,7 +122,7 @@ impl SumUp {
      * <https://developer.sumup.com/docs/api/transactions/>
      */
     #[must_use]
-    pub fn transactions(&self) -> crate::services::Transactions {
+    pub fn transactions(&self) -> crate::services::Transactions<'_> {
         services::Transactions::new(&self.api, &self.access_token)
     }
 }
